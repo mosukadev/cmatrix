@@ -1,29 +1,24 @@
 #include "operacoes.h"
-
-/* Libera a matriz criada e deixa a saida como NULL. */
-static MtzStatus falha_operacao(
-    Matriz *resultado,
-    Matriz **saida,
-    MtzStatus status
-) {
-    /* liberar resultado */
-    /* *saida = NULL */
-    /* devolver status */
-}
-
+#include "matriz_interno.h"
 /* Soma duas matrizes de mesma dimensao. */
 MtzStatus mtz_somar(
     const Matriz *a,
     const Matriz *b,
     Matriz **saida
 ) {
-    /* conferir saida */
-    /* *saida = NULL */
-    /* conferir a e b */
-    /* conferir se tem o mesmo tamanho */
-    /* criar resultado */
-    /* percorrer e gravar a + b */
-    /* entregar resultado */
+    if (saida == NULL) return MTZ_ERRO_NULO;
+    *saida = NULL;
+    if (a == NULL || b == NULL) return MTZ_ERRO_NULO;
+    if (a->linhas != b->linhas || a->colunas != b->colunas) return MTZ_ERRO_DIMENSAO;
+    Matriz *resultado = NULL;
+    if (mtz_criar(a->linhas, a->colunas, &resultado) != MTZ_OK) return MTZ_ERRO_MEMORIA;
+    for (size_t i = 0; i < a->linhas; i++) {
+        for (size_t j = 0; j < a->colunas; j++) {
+            resultado->dados[i * a->colunas + j] = a->dados[i * a->colunas + j] + b->dados[i * a->colunas + j];
+        }
+    }
+    *saida = resultado;
+    return MTZ_OK;
 }
 
 /* Subtrai duas matrizes de mesma dimensao. */
@@ -32,7 +27,19 @@ MtzStatus mtz_subtrair(
     const Matriz *b,
     Matriz **saida
 ) {
-    /* igual a soma, gravando a - b */
+    if (saida == NULL) return MTZ_ERRO_NULO;
+    *saida = NULL;
+    if (a == NULL || b == NULL) return MTZ_ERRO_NULO;
+    if (a->linhas != b->linhas || a->colunas != b->colunas) return MTZ_ERRO_DIMENSAO;
+    Matriz *resultado = NULL;
+    if (mtz_criar(a->linhas, a->colunas, &resultado) != MTZ_OK) return MTZ_ERRO_MEMORIA;
+    for (size_t i = 0; i < a->linhas; i++) {
+        for (size_t j = 0; j < a->colunas; j++) {
+            resultado->dados[i * a->colunas + j] = a->dados[i * a->colunas + j] - b->dados[i * a->colunas + j];
+        }
+    }
+    *saida = resultado;
+    return MTZ_OK;
 }
 
 /* Multiplica duas matrizes compativeis. */
@@ -54,10 +61,18 @@ MtzStatus mtz_escalar(
     double k,
     Matriz **saida
 ) {
-    /* conferir saida, *saida = NULL, conferir m */
-    /* criar resultado do mesmo tamanho */
-    /* percorrer e gravar valor * k */
-    /* entregar resultado */
+    if (saida == NULL) return MTZ_ERRO_NULO;
+    *saida = NULL;
+    if (m == NULL) return MTZ_ERRO_NULO;
+    Matriz *resultado = NULL;
+    if (mtz_criar(m->linhas, m->colunas, &resultado) != MTZ_OK) return MTZ_ERRO_MEMORIA;
+    for (size_t i = 0; i < m->linhas; i++) {
+        for (size_t j = 0; j < m->colunas; j++) {
+            resultado->dados[i * m->colunas + j] = m->dados[i * m->colunas + j] * k;
+        }
+    }
+    *saida = resultado;
+    return MTZ_OK;
 }
 
 /* Troca linhas por colunas. */
