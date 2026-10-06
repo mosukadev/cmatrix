@@ -1,19 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 //Preciso atualizar dps para usar as funções dos outro modulos
 
 MtzStatus mtz_traco(const Matriz *m, double *saida){
+    if(!mtz_e_quadrada(m))
+        return MTZ_ERRO_NAO_QUADRADA;
     double soma =0;
     for(int i =0; i < m->linhas; i++){
         soma += m->dados[i * m-> colunas + i];
     }
-
-    return soma;
+    if(soma == 0)
+        return MTZ_ERRO_NULO;
+    *saida = soma;
+    return MTZ_OK;
 }
 
 MtzStatus mtz_determinante(const Matriz *m, double *saida){
+    if(!mtz_e_quadrada(m))
+        return MTZ_ERRO_NAO_QUADRADA;
+    
     Matriz copia = copiar(m);
+    int sinal = 1;
     for(int k =0; k < copia->colunas; k++){
         //1: acha maior linha
         int maior_linha = k;
@@ -28,7 +37,8 @@ MtzStatus mtz_determinante(const Matriz *m, double *saida){
                 double temp = copia->dados[k * copia->colunas + j];
                 copia->dados[k * copia->colunas + j] = copia->dados[maior_linha * copia->colunas + j];
                 copia->dados[maior_linha * copia->colunas + j] = temp;
-            }        
+            }
+            sinal *= -1;        
         }
         //2.2: multiplicar linhas demais para zeras o k-ésimo elemento
         // Fórmula: j-ésimo elemento/j-esimo elemento da maior linha * (-1)
@@ -40,13 +50,13 @@ MtzStatus mtz_determinante(const Matriz *m, double *saida){
         }
     }
     //3: multiplicar diagonal principal
-    double produto =1;
+    double produto = 1;
     for(int i =0; i < m->linhas; i++){
         produto *= m->dados[i * m-> colunas + i];
     }
-
-    return produto;
-
+    produto *= sinal;
+    *saida = produto;
+    return 0;
 }
 
 int mtz_e_quadrada(const Matriz *m){
@@ -71,8 +81,8 @@ int mtz_sao_iguais(const Matriz *a, const Matriz *b, double eps){
     if(a->linhas != b->linhas || a->colunas != b->colunas)
         return 0;
     for(int i=0; i < a->linhas; i++){
-        for(int j = 0; j < a->colunas){
-            if(a->dados[i * a-> colunas + j] != a->dados[i * a-> colunas + j]){
+        for(int j = 0; j < a->colunas; j++){
+            if(fabs(a->dados[i * a->colunas + j] - b->dados[i * b->colunas + j]) > eps){
                 return 0;
             }
         }
