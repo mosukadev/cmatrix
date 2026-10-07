@@ -48,11 +48,24 @@ MtzStatus mtz_multiplicar(
     const Matriz *b,
     Matriz **saida
 ) {
-    /* conferir saida, *saida = NULL, conferir a e b */
-    /* conferir colunas de a == linhas de b */
-    /* criar resultado: linhas de a x colunas de b */
-    /* para cada (i, j): somar a(i,k) * b(k,j) e gravar */
-    /* entregar resultado */
+    if (saida == NULL) return MTZ_ERRO_NULO;
+    *saida = NULL;
+    if (a == NULL || b == NULL) return MTZ_ERRO_NULO;
+    if (a->colunas != b->linhas) return MTZ_ERRO_DIMENSAO;
+    Matriz *resultado = NULL;
+    MtzStatus status = mtz_criar(a->linhas, b->colunas, &resultado);
+    if (status != MTZ_OK) return status;
+    for (size_t i = 0; i < a->linhas; i++) {
+        for (size_t j = 0; j < b->colunas; j++) {
+            double soma = 0.0;
+            for (size_t k = 0; k < a->colunas; k++) {
+                soma += a->dados[i * a->colunas + k] * b->dados[k * b->colunas + j];
+            }
+            resultado->dados[i * resultado->colunas + j] = soma;
+        }
+    }
+    *saida = resultado;
+    return MTZ_OK;
 }
 
 /* Multiplica todos os elementos por um escalar. */
@@ -80,8 +93,17 @@ MtzStatus mtz_transpor(
     const Matriz *m,
     Matriz **saida
 ) {
-    /* conferir saida, *saida = NULL, conferir m */
-    /* criar resultado: colunas x linhas */
-    /* ler (i, j) e gravar em (j, i) */
-    /* entregar resultado */
+    if (saida == NULL) return MTZ_ERRO_NULO;
+    *saida = NULL;
+    if (m == NULL) return MTZ_ERRO_NULO;
+    Matriz *resultado = NULL;
+    MtzStatus status = mtz_criar(m->colunas, m->linhas, &resultado);
+    if (status != MTZ_OK) return status;
+    for (size_t i = 0; i < m->linhas; i++) {
+        for (size_t j = 0; j < m->colunas; j++) {
+            resultado->dados[j * resultado->colunas + i] = m->dados[i * m->colunas + j];
+        }
+    }
+    *saida = resultado;
+    return MTZ_OK;
 }
