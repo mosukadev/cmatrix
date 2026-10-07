@@ -1,17 +1,31 @@
-CC = GCC
-CFLAGS = -Wall -Iinclude
+CC = gcc
+CFLAGS = -Wall -Iinclude -Wextra -Wpedantic -g
 
-OBJ:
+PREFIX ?= /usr/local
 
-all:
+DINAMICA = lib/libmatriz.so
+ESTATICA = lib/libmatriz.a
 
-clean:
+SRC = $(wildcard src/*.c)
+OBJ = $(patsubst src/%.c,build/%.o,$(SRC))
 
-run:
+all: $(ESTATICA) $(DINAMICA)  bin/app_estatico bin/app_dinamico
 
-test:
+clean: 
+	rm -rf build lib bin
 
-install:
+run: run-static
+
+test: $(ESTATICA)
+	@mkdir -p build
+	@fail=0; for f in testes/teste_*.c; do \
+		$(CC) $(FLAGS) -Itests $$f $(ESTATICA) -lm -o build/teste && build/teste || fail=1; \
+	done; exit $$fail
+
+install: $(ESTATICA) $(DINAMICA)
+	install -d $(PREFIX)/lib $(PREFIX)/include/libmatriz
+	install -m 644 $(ESTATICA) $(DINAMICA) $(PREFIX)/lib
+
 
 run-static:
 
@@ -22,3 +36,4 @@ valgrind:
 docs:
 
 uninstall:
+	rm -f $(PREFIX)/lib/libmatriz.a $(PREFIX)/lib/libmatriz.so
