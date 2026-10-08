@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <libmatriz.h>
+#include <libmatriz/libmatriz.h>
 
 int main() {
     Matriz *a = NULL;          /* 3x3, lida do arquivo            */
@@ -33,8 +33,7 @@ int main() {
         printf("    Falhou: %s\n", mtz_mensagem_erro(status));
         return 1;
     }
-    printf("    Lida com sucesso: %zu linhas e %zu colunas\n",
-           mtz_linhas(a), mtz_colunas(a));
+    printf("    Lida com sucesso: %zu linhas e %zu colunas\n",mtz_linhas(a), mtz_colunas(a));
     mtz_imprimir(a, stdout);
      
    /* 2 - modulo arquivo: cria a matriz B a partir de um vetor */
@@ -89,8 +88,7 @@ int main() {
     printf("    Traco de A: %.2f (%s)\n", traco, mtz_mensagem_erro(status));
 
     status = mtz_determinante(a, &determinante);
-    printf("    Determinante de A: %.2f (%s)\n", determinante,
-           mtz_mensagem_erro(status));
+    printf("    Determinante de A: %.2f (%s)\n", determinante, mtz_mensagem_erro(status));
 
     /* 9 - cria uma matriz 2x3 para demonstrar os casos de erro */
     printf("\nCriando a matriz C (2x3) para os casos de erro\n");
@@ -99,19 +97,15 @@ int main() {
     mtz_imprimir(c, stdout);
 
     /* 10 - erro: traco exige matriz quadrada */
-    printf("\nTentando calcular o traco de C, que e %zux%zu\n",
-           mtz_linhas(c), mtz_colunas(c));
+    printf("\nTentando calcular o traco de C, que e %zux%zu\n",mtz_linhas(c), mtz_colunas(c));
     status = mtz_traco(c, &traco);
     printf("     A biblioteca recusou: %s\n", mtz_mensagem_erro(status));
 
     /* 11 - erro: soma exige dimensoes iguais */
-    printf("\nTentando somar A (%zux%zu) com C (%zux%zu)\n",
-           mtz_linhas(a), mtz_colunas(a), mtz_linhas(c), mtz_colunas(c));
+    printf("\nTentando somar A (%zux%zu) com C (%zux%zu)\n", mtz_linhas(a), mtz_colunas(a), mtz_linhas(c), mtz_colunas(c));
     status = mtz_somar(a, c, &invalida);
     printf("     A biblioteca recusou: %s\n", mtz_mensagem_erro(status));
-    printf("     A matriz de saida continua vazia: %s\n",
-           invalida == NULL ? "sim" : "nao");
-
+    
     /* 12 - modulo arquivo: grava o resultado no disco */
     printf("\nGravando o produto A x B em saida.txt\n");
     status = mtz_salvar(produto, "saida.txt");
