@@ -3,7 +3,7 @@
 
 struct Matriz {
     size_t linhas;
-    site_t colunas;
+    size_t colunas;
     double *dados;
 };
 

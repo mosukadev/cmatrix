@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "erro.h"
 
 const char *mtz_mensagem_erro(MtzStatus status) {
