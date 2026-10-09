@@ -8,25 +8,6 @@ extern int g_total_testes;
 extern int g_testes_passaram;
 extern int g_testes_falharam;
 
-// Inicialisa as variaveis globais
-// Nao tem parametros
-// Nao retorna valores
-void TESTE_INICIAR(void) {
-    g_total_testes = 0;
-    g_testes_passaram = 0;
-    g_testes_falharam = 0;
-}
-
-// Imprime no console retultado dos testes
-// Nao tem parametros
-// Retorna 0 caso g_testes_falharam for 0, e 1 caso contrario
-int TESTE_RELATORIO(void){
-
-    printf("Total: %d, Passaram: %d, Falharam: %d\n", g_total_testes, g_testes_passaram, g_testes_falharam);
-
-    return g_testes_falharam == 0 ? 0 : 1;
-}
-
 
 #define VERIFICA(condicao, nome_teste) do { \
     g_total_testes++; \
