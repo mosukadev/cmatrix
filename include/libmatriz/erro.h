@@ -12,7 +12,8 @@ typedef enum {
     MTZ_ERRO_MEMORIA,       /**< Falha na alocação de memória. */
     MTZ_ERRO_NAO_QUADRADA,  /**< Operação exige uma matriz quadrada. */
     MTZ_ERRO_ARQUIVO,       /**< Falha ao abrir, ler ou gravar arquivo. */
-    MTZ_ERRO_FORMATO        /**< Conteúdo do arquivo em formato inválido. */
+    MTZ_ERRO_FORMATO,       /**< Conteúdo do arquivo em formato inválido. */
+    MTZ_ITERATOR            /**< Marca o final do enum para iterar sobre ele */
 } MtzStatus;
 
 /**

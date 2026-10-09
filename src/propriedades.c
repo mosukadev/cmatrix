@@ -1,33 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <libmatriz/matriz.h>
+#include <libmatriz/matriz_interno.h>
+#include <libmatriz/arquivo.h>
+#include <stdbool.h>
 
-//Preciso atualizar dps para usar as funções dos outro modulos
+//Arrumar validações
 
 MtzStatus mtz_traco(const Matriz *m, double *saida){
+    if(m == NULL)
+        return MTZ_ERRO_NULO;
     if(!mtz_e_quadrada(m))
         return MTZ_ERRO_NAO_QUADRADA;
     double soma =0;
     for(int i =0; i < m->linhas; i++){
         soma += m->dados[i * m-> colunas + i];
     }
-    if(soma == 0)
-        return MTZ_ERRO_NULO;
     *saida = soma;
     return MTZ_OK;
 }
 
 MtzStatus mtz_determinante(const Matriz *m, double *saida){
+    if(m == NULL)
+        return MTZ_ERRO_NULO;
     if(!mtz_e_quadrada(m))
         return MTZ_ERRO_NAO_QUADRADA;
     
-    Matriz copia = copiar(m);
+    Matriz copia = mtz_copiar(m);
     int sinal = 1;
     for(int k =0; k < copia->colunas; k++){
         //1: acha maior linha
         int maior_linha = k;
         for(int i = k+1; i < copia->linhas; i++){
-            if(copia->dados[i * copia->colunas + k] > copia->dados[maior_linha * copia->colunas + k])
+            if(fabs(copia->dados[i * copia->colunas + k]) > fabs(copia->dados[maior_linha * copia->colunas + k]))
                 maior_linha = i;
         }
         //2: fazer escalonamento até ficar triangular
@@ -51,41 +57,59 @@ MtzStatus mtz_determinante(const Matriz *m, double *saida){
     }
     //3: multiplicar diagonal principal
     double produto = 1;
-    for(int i =0; i < m->linhas; i++){
-        produto *= m->dados[i * m-> colunas + i];
+    for(int i =0; i < copia->linhas; i++){
+        produto *= copia->dados[i * copia-> colunas + i];
     }
     produto *= sinal;
     *saida = produto;
+    mtz_destruir(copia);
     return 0;
 }
 
-int mtz_e_quadrada(const Matriz *m){
+bool mtz_e_quadrada(const Matriz *m){
+    if(m == NULL)
+        return false;
+
     if(m->linhas == m->colunas){
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
-int mtz_e_simetrica(const Matriz *m, double eps){
-    Matriz transposta;
-    transposta.colunas = m->colunas;
-    transposta.linhas = m->linhas;
-    transposta.dados = malloc(transposta->colunas * transposta->linhas * sizeof *transposta.dados);
-    if(mtz_sao_iguais(m, transposta, eps))
-        return 1;
-    else
-        return 0;
+bool mtz_e_simetrica(const Matriz *m, double eps){
+    if(m == NULL)
+        return false;
+        
+    if(!mtz_e_quadrada(m))
+        return false;
+
+    Matriz *transposta;
+    if(mtz_criar(m->linhas, m->colunas, &transposta) != MTZ_OK)
+        return false;
+
+    for(size_t i = 0; i < m->linhas; i++){
+        for(size_t j = 0; j < m->colunas; j++){
+            double valor;
+            mtz_definir(transposta, j, i, valor);
+        }
+    }
+
+    bool simetrica = mtz_sao_iguais(m, transposta, eps);
+    mtz_destruir(transposta);
+    return simetrica;
 }
 
-int mtz_sao_iguais(const Matriz *a, const Matriz *b, double eps){
+bool mtz_sao_iguais(const Matriz *a, const Matriz *b, double eps){
+    if(m == NULL)
+        return false;
     if(a->linhas != b->linhas || a->colunas != b->colunas)
-        return 0;
+        return false;
     for(int i=0; i < a->linhas; i++){
         for(int j = 0; j < a->colunas; j++){
             if(fabs(a->dados[i * a->colunas + j] - b->dados[i * b->colunas + j]) > eps){
-                return 0;
+                return false;
             }
         }
     }
-    return 1;
+    return true;
 }

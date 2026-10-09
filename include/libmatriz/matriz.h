@@ -3,6 +3,8 @@
 
 #include "erro.h"
 
+#include <stdlib.h>
+
 typedef struct Matriz Matriz;
 
 /**

@@ -5,7 +5,7 @@ MtzStatus mtz_criar(size_t linhas, size_t colunas, Matriz **saida) {
     if (saida == NULL) return MTZ_ERRO_NULO;
     if (linhas == 0 || colunas == 0) return MTZ_ERRO_DIMENSAO;
     
-    *saida = malloc(sizeof **saida);
+    *saida = calloc(1, sizeof **saida);
     
     if (*saida == NULL) return MTZ_ERRO_MEMORIA;
     
@@ -37,7 +37,7 @@ MtzStatus mtz_copiar(const Matriz *origem, Matriz **saida) {
     if (status != MTZ_OK) return status;
     
     for (int i = 0; i < origem->linhas * origem->colunas; i++) {
-        (*saida)->dados)[i] = origem->dados[i];
+        ((*saida)->dados)[i] = origem->dados[i];
     }
 
     return MTZ_OK;
