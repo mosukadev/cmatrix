@@ -44,7 +44,7 @@ static double dados_f[] = {3, 8, 4, 6};
 static double dados_g[] = {1, 2, 2, 4};
 static double dados_h[] = {0, 1, 1, 0};
 static double dados_s[] = {1, 2, 2, 1};
-static Matriz *A, *B, *C, *D, *E, *F, *G, *H, *S, I;
+static Matriz *A, *B, *C, *D, *E, *F, *G, *H, *S, *I, *temp;
 
 static void teste_mtz_traco(void){
     static const double dados_unico[] = {9};
@@ -110,12 +110,20 @@ static void teste_mtz_determinante(void){
     status = mtz_determinante(un_elemento, &saida);
     VERIFICA_IGUAL(saida, esperado, 'determinante_unico_elemento');
 
-    // FALTA 2 CASOS AQUI AINDA, que é de uma matriz 2x3 e conferir matriz depois do cálculo(esse teste acho que não precise)
+    mtz_de_vetor(2, 3, dados_c, &C);
+    status = mtz_determinante(C, &saida);
+    VERIFICA_IGUAL(status, MTZ_ERRO_NAO_QUADRADA, 'determinante_2x3');
+
+    double eps =  1e-9;
+    bool igualdade = mtz_sao_iguais(C, mtz_de_vetor(2, 3, dados_c, &temp), eps);
+    VERIFICA_IGUAL(igualdade, true, 'matriz_alteracao');
 
     mtz_destruir(F);
     mtz_destruir(E);
     mtz_destruir(G);
     mtz_destruir(H);
+    mtz_destruir(C);
+    mtz_destruir(temp);
     mtz_destruir(identidade);
     mtz_destruir(un_elemento);
 }
@@ -171,5 +179,21 @@ static void teste_mtz_sao_iguais(void){
     status = mtz_sao_iguais(S,C, eps);
     VERIFICA_IGUAL(status, false, 'igual_tamanhos_diferentes');
 
-    // AINDA FALTA PREENCHER OS 2 ÚLTIMOS CASOS
+
+    eps =  1e-6;
+    mtz_copiar(C, &temp);
+    const double diferenca = 1e-10;
+    for (size_t i = 0; i < mtz_linhas(temp); i++){
+        for (size_t j = 0; j < mtz_colunas(temp); j++){
+            double valor;
+            mtz_obter(temp, i, j, &valor);
+            mtz_definir(temp, i, j, valor - diferenca);
+        }
+    }
+    status = mtz_sao_iguais(C, temp, eps);
+    VERIFICA_IGUAL(status, true, 'igual_diferenca_dentro_tolerancia');
+
+    mtz_destruir(S);
+    mtz_destruir(C);
+    mtz_destruir(temp);
 }
