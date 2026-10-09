@@ -4,6 +4,8 @@
 #include "erro.h"
 #include "matriz.h"
 
+#include <stdio.h>
+
 /**
  * @brief Cria uma matriz a partir de um vetor de dados.
  * @param linhas Quantidade de linhas da matriz.

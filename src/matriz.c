@@ -37,7 +37,7 @@ MtzStatus mtz_copiar(const Matriz *origem, Matriz **saida) {
     if (status != MTZ_OK) return status;
     
     for (int i = 0; i < origem->linhas * origem->colunas; i++) {
-        (*saida)->dados)[i] = origem->dados[i];
+        ((*saida)->dados)[i] = origem->dados[i];
     }
 
     return MTZ_OK;
