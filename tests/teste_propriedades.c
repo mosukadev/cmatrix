@@ -1,31 +1,3 @@
-// A é [[1,2],[3,4]], B é [[5,6],[7,8]], C é [[1,2,3],[4,5,6]] e D é [[7,8],[9,10],[11,12]].
-// Matrizes usadas: E é [[1,2,3],[4,5,6],[7,8,10]], com determinante menos 3. F é [[3,8],[4,6]], com determinante menos 14. G é [[1,2],[2,4]], com determinante 0. H é [[0,1],[1,0]], com determinante menos 1, e obriga a troca de linhas. S é [[1,2],[2,1]], que é simétrica.
-
-
-
-// mtz_traco: traço de A. Esperado: 5.
-// mtz_traco: matriz 2x3. Esperado: MTZ_ERRO_NAO_QUADRADA.
-// mtz_traco: matriz 1x1 com valor 9. Esperado: 9. Caso limite.
-// mtz_determinante: matriz F. Esperado: menos 14.
-// mtz_determinante: matriz E. Esperado: menos 3.
-// mtz_determinante: identidade 3x3. Esperado: 1.
-// mtz_determinante: matriz G, que é singular. Esperado: 0.
-// mtz_determinante: matriz H, que tem zero no primeiro pivô. Esperado: menos 1. É o caso do teste que vai falhar de propósito.
-// mtz_determinante: matriz 1x1 com valor 5. Esperado: 5. Caso limite.
-// mtz_determinante: matriz 2x3. Esperado: MTZ_ERRO_NAO_QUADRADA.
-// mtz_determinante: conferir a matriz depois do cálculo. Esperado: não foi alterada.
-// mtz_e_quadrada: matriz 3x3. Esperado: verdadeiro.
-// mtz_e_quadrada: matriz 2x3. Esperado: falso.
-// mtz_e_quadrada: NULL. Esperado: falso.
-// mtz_e_simetrica: matriz S. Esperado: verdadeiro.
-// mtz_e_simetrica: matriz A. Esperado: falso.
-// mtz_e_simetrica: matriz 2x3. Esperado: falso, porque não é quadrada.
-// mtz_sao_iguais: duas cópias iguais. Esperado: verdadeiro.
-// mtz_sao_iguais: tamanhos diferentes. Esperado: falso.
-// mtz_sao_iguais: diferença de 0,0000000001 com tolerância de 0,000001. Esperado: verdadeiro.
-// mtz_sao_iguais: uma das matrizes é NULL. Esperado: falso.
-
-
 #include <stdio.h>
 
 #include <libmatriz/arquivo.h>
