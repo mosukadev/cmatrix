@@ -1,5 +1,5 @@
-#ifndef matriz_interno_h
-#define matriz_interno_h
+#ifndef MATRIZ_INTERNO_H
+#define MATRIZ_INTERNO_H
 
 struct Matriz {
     size_t linhas;

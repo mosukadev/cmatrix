@@ -1,5 +1,5 @@
-#ifndef MTZ_ERRO_H
-#define MTZ_ERRO_H
+#ifndef ERRO_H
+#define ERRO_H
 
 /**
  * @brief Códigos de status retornados pelas funções da biblioteca.

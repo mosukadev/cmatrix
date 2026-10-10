@@ -1,5 +1,5 @@
-#ifndef _arquivo_h
-#define _arquivo_h
+#ifndef ARQUIVO_H
+#define ARQUIVO_H
 
 #include "erro.h"
 #include "matriz.h"

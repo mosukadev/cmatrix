@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <libmatriz/libmatriz.h>
+#include <libmatriz.h>
 
 int main() {
     Matriz *a = NULL;          /* 3x3, lida do arquivo            */

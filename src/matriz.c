@@ -1,5 +1,5 @@
 #include "matriz_interno.h"
-#include "matriz.h"
+#include <libmatriz/matriz.h>
 
 MtzStatus mtz_criar(size_t linhas, size_t colunas, Matriz **saida) {
     if (saida == NULL) return MTZ_ERRO_NULO;

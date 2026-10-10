@@ -1,5 +1,5 @@
-#ifndef _matriz_h
-#define _matriz_h
+#ifndef MATRIZ_H
+#define MATRIZ_H
 
 #include "erro.h"
 

@@ -1,5 +1,5 @@
-#ifndef MTZ_PROPRIEDADES_H
-#define MTZ_PROPRIEDADES_H
+#ifndef PROPRIEDADES_H
+#define PROPRIEDADES_H
 
 #include <stdbool.h>
 

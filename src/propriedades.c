@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <libmatriz/matriz.h>
-#include <libmatriz/matriz_interno.h>
+#include "matriz_interno.h"
 #include <libmatriz/arquivo.h>
 #include <stdbool.h>
 

@@ -1,4 +1,4 @@
-#include "operacoes.h"
+#include <libmatriz/operacoes.h>
 #include "matriz_interno.h"
 /* Soma duas matrizes de mesma dimensao. */
 MtzStatus mtz_somar(

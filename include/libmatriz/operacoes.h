@@ -1,5 +1,5 @@
-#ifndef MTZ_OPERACOES_H
-#define MTZ_OPERACOES_H
+#ifndef OPERACOES_H
+#define OPERACOES_H
 
 #include "erro.h"
 #include "matriz.h"
