@@ -45,7 +45,7 @@ MtzStatus mtz_copiar(const Matriz *origem, Matriz **saida);
  * @retval MTZ_ERRO_NULO se `m` ou `saida` for nulo.
  * @retval MTZ_ERRO_INDICE se `i` ou `j` estiver fora dos limites da matriz.
  */
-MtzStatus mtz_obter(const Matriz *m, size_t i, size_t j, double **saida);
+MtzStatus mtz_obter(const Matriz *m, size_t i, size_t j, double *saida);
 
 /**
  * @brief Define o valor de um elemento da matriz.
