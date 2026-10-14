@@ -1,39 +1,97 @@
 CC = gcc
-CFLAGS = -Wall -Iinclude -Wextra -Wpedantic -g
+
+#Flags pra ver erros, incremental etc
+CFLAGS = -Wall -Wextra -Iinclude  -Wpedantic -g
+#GLags para grantir o inncrmental, especialmente cabeçalho dos .o
+DFLAGS = -MMD -MP
 
 PREFIX ?= /usr/local
 
+#Pastas e nome das bibliotecas
 DINAMICA = lib/libmatriz.so
 ESTATICA = lib/libmatriz.a
 
+# Arquivos fonte
 SRC = $(wildcard src/*.c)
-OBJ = $(patsubst src/%.c,build/%.o,$(SRC))
+OBJ = $(patsubst src/%.c,build/est/%.o,$(SRC))
+OBJ_DIN = $(patsubst src/%.c,build/din/%.o,$(SRC))
+
+# Declarar alvos que não são arquivos
+.PHONY: all clean run test install run-static run-dynamic valgrind uninstall
 
 all: $(ESTATICA) $(DINAMICA)  bin/app_estatico bin/app_dinamico
 
-clean: 
-	rm -rf build lib bin
 
+#Criação da lib estática
+$(ESTATICA): $(OBJ)
+	@mkdir -p lib
+	ar rcs $@ $^
+
+build/est/%.o: src/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(DFLAGS) -c $< -o $@
+
+
+# Criação da lib dinâmica
+$(DINAMICA): $(OBJ_DIN)
+	@mkdir -p lib
+	$(CC) -shared -o $@ $^ -lm 
+
+build/din/%.o: src/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(DFLAGS) -c -fPIC $< -o $@
+
+# Gera executável da principal.c linkando com a lib estatica
+bin/app_estatico: app/principal.c $(ESTATICA)
+	@mkdir -p bin
+	$(CC) $(CFLAGS) $(DFLAGS) -MF $@.d -MT $@ app/principal.c $(ESTATICA) -lm -o $@
+
+# Gera executável da principal.c linkando com a lib dinamica
+bin/app_dinamico: app/principal.c $(DINAMICA)
+	@mkdir -p bin
+	$(CC) $(CFLAGS) $(DFLAGS) -MF $@.d -MT $@ app/principal.c $(DINAMICA) -lm -Wl,-rpath,'$$ORIGIN/../lib' -o $@
+
+
+# Include dos .d pra incremental
+-include $(OBJ:.o=.d) $(OBJ_DIN:.o=.d) bin/app_estatico.d bin/app_dinamico.d
+
+# Por padrão, rodamos com estáticos, mas acho que isso seja mudável
 run: run-static
 
+# Criar arquivo teste e sobrescreve em cada teste, já que compila
 test: $(ESTATICA)
 	@mkdir -p build
-	@fail=0; for f in testes/teste_*.c; do \
-		$(CC) $(FLAGS) -Itests $$f $(ESTATICA) -lm -o build/teste && build/teste || fail=1; \
+	@fail=0; for f in tests/teste_*.c; do \
+		$(CC) $(CFLAGS) -Itests $$f $(ESTATICA) -lm -o build/teste && build/teste || fail=1; \
 	done; exit $$fail
 
+# Instala as libs no usr/local
 install: $(ESTATICA) $(DINAMICA)
 	install -d $(PREFIX)/lib $(PREFIX)/include/libmatriz
 	install -m 644 $(ESTATICA) $(DINAMICA) $(PREFIX)/lib
+	install -m 644 include/libmatriz/*.h $(PREFIX)/include/libmatriz
 
+# Roda estático
+run-static: bin/app_estatico
+	./bin/app_estatico
 
-run-static:
+# Roda dinâmico
+run-dynamic: bin/app_dinamico
+	./bin/app_dinamico
 
-run-dynamic:
+# Confere vazamentos, ou seja, malloc sem free etc.
+valgrind: all
+	valgrind --leak-check=full --error-exitcode=1 ./bin/app_estatico
+	@mkdir -p build
+	@for f in tests/teste_*.c; do \
+		$(CC) $(CFLAGS) -Itests $$f $(ESTATICA) -lm -o build/teste && valgrind --leak-check=full --error-exitcode=1 build/teste || exit 1; \
+	done
 
-valgrind:
-
-docs:
-
+# Tira do usr/local
 uninstall:
 	rm -f $(PREFIX)/lib/libmatriz.a $(PREFIX)/lib/libmatriz.so
+	rm -rf $(PREFIX)/include/libmatriz
+
+# Cleana as pastas
+clean: 
+	rm -rf build lib bin
