@@ -1,127 +1,188 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "libmatriz/arquivo.h"
+#include "matriz_interno.h"
 
-void mtz_de_vetor(size_t linhas, size_t colunas, double *entrada, double **saida) {
+MtzStatus mtz_de_vetor(size_t linhas, size_t colunas, const double *dados, Matriz **saida) {
     
-    for (int i = 0; i < linhas; i++) {
-        for (int j = 0; j < colunas; j++) {
-            saida[i][j] = entrada[i*colunas+j];
-        }
-    }
-}
-
-// mtz_imprimir
-
-void mtz_carregar(char *caminho, double ***saida, size_t tam_saida[2]){
-
-    FILE *file;
-
-    file = fopen(caminho, "r");
-    
-    size_t linhas, colunas;
-
-    fscanf(file, "%zu %zu", &linhas, &colunas);
-
-    tam_saida[0] = linhas;
-    tam_saida[1] = colunas;
-
-    (*saida) = malloc(linhas * sizeof(double *));
-    double tmp;
-
-    for (int i = 0; i < linhas; i++) {
-        (*saida)[i] = malloc(colunas * sizeof(double));
-
-        for (int j = 0; j < colunas; j++) {
-            fscanf(file, "%lf", &tmp);
-            (*saida)[i][j] = tmp;
-        }
+    if (saida == NULL || dados == NULL) {
+        return MTZ_ERRO_NULO;
     }
 
-    fclose(file);
+    if (linhas == 0 || colunas == 0) {
+        MTZ_ERRO_DIMENSAO;
+    }
+
+    Matriz *m = malloc(sizeof(Matriz));
+
+    if (m == NULL) {
+        return MTZ_ERRO_MEMORIA;
+    }
+
+    m->linhas = linhas;
+    m->colunas = colunas;
+    m->dados = malloc(linhas * colunas * sizeof(double));
+
+    if (m->dados == NULL) {
+        return MTZ_ERRO_MEMORIA;
+    }
+
+    for (size_t i = 0; i < linhas*colunas; i++) {
+        m->dados[i] = dados[i];
+    }
+    
+    *saida = NULL;
+    *saida = m;
+
+    return MTZ_OK;
 }
 
-void mtz_salvar(size_t linhas, size_t colunas, double **entrada, char *caminho){
+MtzStatus mtz_imprimir(const Matriz *m, FILE *arquivo) {
 
-    FILE *file;
+    if (m == NULL || arquivo == NULL) {
+        return MTZ_ERRO_NULO;
+    }
 
-    file = fopen(caminho, "w");
-
-
-    size_t tamanho = snprintf(NULL, 0, "%zu %zu", linhas, colunas) + 2; // +2 because of \n
+    size_t tamanho = snprintf(NULL, 0, "%zu %zu", m->linhas, m->colunas) + 2; // +2 because of \n
+    
     char *str = malloc(tamanho*sizeof(char));
-    snprintf(str, tamanho, "%zu %zu\n", linhas, colunas);
 
-    for (int i = 0; i < linhas; i++) {
-        for (int j = 0; j < colunas-1; j++) {
+    if (str == NULL) {
+        free(str);
+        return MTZ_ERRO_MEMORIA;
+    }
 
-            size_t tam_adicionado = snprintf(NULL, 0, "%f ", entrada[i][j]);
+    snprintf(str, tamanho, "%zu %zu\n", m->linhas, m->colunas);
+
+    for (int i = 0; i < m->linhas; i++) {
+        for (int j = 0; j < m->colunas-1; j++) {
+
+            size_t tam_adicionado = snprintf(NULL, 0, "%f ", m->dados[i*m->colunas + j]);
             
             char *temp = realloc(str, (tamanho + tam_adicionado)*sizeof(char));
+
+            if (temp == NULL) {
+                free(temp);
+                free(str);
+                return MTZ_ERRO_MEMORIA;
+            }
+
             str = temp;
 
-            snprintf(str + tamanho - 1, tam_adicionado + 1, "%f ", entrada[i][j]); // -1 because of \0
+            snprintf(str + tamanho - 1, tam_adicionado + 1, "%f ", m->dados[i*m->colunas + j]); // -1 because of \0
             
             tamanho += tam_adicionado;
         }
-        size_t tam_adicionado = snprintf(NULL, 0, "%f", entrada[i][colunas-1]) + 1; // +2 because of \n
+        size_t tam_adicionado = snprintf(NULL, 0, "%f", m->dados[(i+1)*m->colunas-1]) + 1; // +2 because of \n
         
         char *temp = realloc(str, (tamanho + tam_adicionado)*sizeof(char));
+        
+        if (temp == NULL) {
+            free(temp);
+            free(str);
+            return MTZ_ERRO_MEMORIA;
+        }
+
         str = temp;
 
-        snprintf(str + tamanho - 1, tam_adicionado + 1, "%f\n", entrada[i][colunas-1]); // -1 because of \0
+        snprintf(str + tamanho - 1, tam_adicionado + 1, "%f\n", m->dados[(i+1)*m->colunas-1]); // -1 because of \0
 
         tamanho += tam_adicionado;
         
     }
-    printf("%s",str);
 
-    fprintf(file, "%s", str);
-
-    fclose(file); 
+    fprintf(arquivo, "%s", str);
 
     free(str);
+
+    return MTZ_OK;
 }
 
-int main() {
+MtzStatus mtz_carregar(const char *caminho, Matriz **saida) {
 
-    // size_t linhas = 3, colunas = 3;
-    // double *vec = malloc(linhas * colunas * sizeof(double));
-
-
-
-    // for (int i = 0; i < linhas*colunas; i++) {
-    //     vec[i] = (double) i + 1;
-    // }
-
-    // double **mat = malloc(linhas * sizeof(double *));
-    
-    // for (int i = 0; i < linhas; i++) {
-    //     mat[i] = malloc(colunas * sizeof(double));
-    // }
-
-    // mtz_de_vetor(linhas, colunas, vec, mat);
-
-    //mtz_salvar(linhas, colunas, mat, "testelol");
-
-    //free(vec);
-    //free(mat);
-
-    double **mat;
-    
-    size_t tam_mat[2];
-    
-    mtz_carregar("testelol", &mat, tam_mat);
-
-    size_t linhas = tam_mat[0];
-    size_t colunas = tam_mat[1];
-
-    for (int i = 0; i < linhas; i++) {
-        for (int j = 0; j < colunas; j++) {
-            printf("%lf ", mat[i][j]);
-        }
-        printf("\n");
+    if (caminho == NULL || saida == NULL) {
+        return MTZ_ERRO_NULO;
     }
 
-    free(mat);
+    FILE *arquivo;
+
+    arquivo = fopen(caminho, "r");
+    
+
+    if (arquivo == NULL) {
+        return MTZ_ERRO_ARQUIVO;
+    }
+
+    size_t linhas, colunas;
+
+    if (fscanf(arquivo, "%zu %zu", &linhas, &colunas) != 2) {
+        fclose(arquivo);
+        return MTZ_ERRO_FORMATO;
+    }
+
+    if (linhas == 0 || colunas == 0) {
+        fclose(arquivo);
+        return MTZ_ERRO_DIMENSAO;
+    }
+
+    Matriz *m = malloc(sizeof(Matriz));
+
+    if (m == NULL) {
+        fclose(arquivo);
+        return MTZ_ERRO_MEMORIA;
+    }
+
+    m->linhas = linhas;
+    m->colunas = colunas;
+    m->dados = malloc(linhas * colunas * sizeof(double));
+
+    if (m->dados == NULL) {
+        fclose(arquivo);
+        free(m);
+        return MTZ_ERRO_MEMORIA;
+    }
+
+    double tmp;
+
+    for (int i = 0; i < linhas * colunas; i++) {
+        
+        if (fscanf(arquivo, "%lf", &tmp) != 1) {
+            fclose(arquivo);
+            free(m->dados);
+            free(m);
+            return MTZ_ERRO_FORMATO;
+        }
+
+        m->dados[i] = tmp;
+    }
+
+    fclose(arquivo);
+
+    *saida = NULL;
+    *saida = m;
+
+    return MTZ_OK;
+
+}
+
+MtzStatus mtz_salvar(const Matriz *m, const char *caminho) {
+
+    if (m == NULL || caminho == NULL) {
+        return MTZ_ERRO_NULO;
+    }
+    
+    FILE *arquivo;
+
+    arquivo = fopen(caminho, "w");
+    
+    if (arquivo == NULL) {
+        return MTZ_ERRO_ARQUIVO;
+    }
+
+    MtzStatus resultado = mtz_imprimir(m, arquivo);
+
+    fclose(arquivo);
+    
+    return resultado;
 }
