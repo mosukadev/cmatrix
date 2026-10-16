@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <libmatriz.h>
+#include <libmatriz/libmatriz.h>
 
 int main() {
     Matriz *a = NULL;          /* 3x3, lida do arquivo            */
@@ -23,9 +23,6 @@ int main() {
 
     const double valores_c[] = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0 };
     
-    double vetor [10]= {1, 2, 3 , 4, 0,4,6,7,9}
-
-
    /* 1 - modulo arquivo: le a matriz A do disco */
     printf("\nLendo a matriz A de app/exemplo.txt\n");
     status = mtz_carregar("app/exemplo.txt", &a);
@@ -81,8 +78,8 @@ int main() {
     /* 8 - modulo propriedades */
     printf("\nConsultando as propriedades de A\n");
     printf("    A e quadrada?  %s\n", mtz_e_quadrada(a) ? "sim" : "nao");
-    printf("    A e simetrica? %s\n", mtz_e_simetrica(a, EPS) ? "sim" : "nao");
-    printf("    A e igual a B? %s\n", mtz_sao_iguais(a, b, EPS) ? "sim" : "nao");
+    printf("    A e simetrica? %s\n", mtz_e_simetrica(a, 1e-9) ? "sim" : "nao");
+    printf("    A e igual a B? %s\n", mtz_sao_iguais(a, b, 1e-9) ? "sim" : "nao");
 
     status = mtz_traco(a, &traco);
     printf("    Traco de A: %.2f (%s)\n", traco, mtz_mensagem_erro(status));
@@ -113,7 +110,7 @@ int main() {
 
     /* 13 - modulo matriz: libera toda a memoria */
     printf("\nLiberando a memoria de todas as matrizes\n\n");
-    mtz_destruir(a); mtz_destruir(b); mtz_destruir(c); mtz_destruir(soma); mtz_destruir(diferenca); mt z_destruir(produto) mtz_destruir(transposta); mtz_destruir(dobro); mtz_destruir(invalida);
+    mtz_destruir(a); mtz_destruir(b); mtz_destruir(c); mtz_destruir(soma); mtz_destruir(diferenca); mtz_destruir(produto); mtz_destruir(transposta); mtz_destruir(dobro); mtz_destruir(invalida);
     printf("    É isso. Acabou.\n");
 
     return 0;

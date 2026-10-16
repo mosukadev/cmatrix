@@ -1,6 +1,9 @@
 #ifndef MATRIZ_INTERNO_H
 #define MATRIZ_INTERNO_H
 
+#include <stddef.h>
+
+
 struct Matriz {
     size_t linhas;
     size_t colunas;
