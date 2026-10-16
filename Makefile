@@ -68,8 +68,9 @@ test: $(ESTATICA)
 # Instala as libs no usr/local
 install: $(ESTATICA) $(DINAMICA)
 	install -d $(PREFIX)/lib $(PREFIX)/include/libmatriz
-	install -m 644 $(ESTATICA) $(DINAMICA) $(PREFIX)/lib
-	install -m 644 include/libmatriz/*.h $(PREFIX)/include/libmatriz
+	install -m 644 $(ESTATICA) $(DINAMICA) $(PREFIX)/lib/
+	install -m 644 include/libmatriz.h $(PREFIX)/include/
+	install -m 644 include/libmatriz/*.h $(PREFIX)/include/libmatriz/
 
 # Roda estático
 run-static: bin/app_estatico
