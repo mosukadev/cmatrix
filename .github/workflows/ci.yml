@@ -23,7 +23,7 @@ jobs:
         run: make all
 
       - name: Instalar o Programa
-        run: make install
+        run: sudo make install
 
       - name: Executar testes
         run: make test
