@@ -1,5 +1,6 @@
 #include "matriz_interno.h"
 #include <libmatriz/matriz.h>
+#include <stddef.h>
 
 MtzStatus mtz_criar(size_t linhas, size_t colunas, Matriz **saida) {
     if (saida == NULL) return MTZ_ERRO_NULO;
@@ -36,7 +37,7 @@ MtzStatus mtz_copiar(const Matriz *origem, Matriz **saida) {
 
     if (status != MTZ_OK) return status;
     
-    for (int i = 0; i < origem->linhas * origem->colunas; i++) {
+    for (size_t i = 0; i < origem->linhas * origem->colunas; i++) {
         ((*saida)->dados)[i] = origem->dados[i];
     }
 
