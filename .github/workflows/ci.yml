@@ -1,0 +1,29 @@
+
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - test/CI
+  push:
+    branches: 
+      - main
+      - test/CI
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Compilar bibliotecas
+        run: make all
+
+      - name: Instalar o Programa
+        run: make install
+
+      - name: Executar testes
+        run: make test
