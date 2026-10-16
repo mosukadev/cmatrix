@@ -2,6 +2,8 @@
 
 const char *mtz_mensagem_erro(MtzStatus status) {
     switch (status) {
+        case MTZ_OK:
+            return "OK";
         case MTZ_ERRO_NULO:
             return "Ponteiro nulo recebido.";
             break;

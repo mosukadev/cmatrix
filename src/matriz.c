@@ -1,17 +1,18 @@
 #include "matriz_interno.h"
 #include <libmatriz/matriz.h>
+#include <stddef.h>
 
 MtzStatus mtz_criar(size_t linhas, size_t colunas, Matriz **saida) {
     if (saida == NULL) return MTZ_ERRO_NULO;
     if (linhas == 0 || colunas == 0) return MTZ_ERRO_DIMENSAO;
     
-    *saida = calloc(1, sizeof **saida);
+    *saida = malloc(sizeof **saida);
     
     if (*saida == NULL) return MTZ_ERRO_MEMORIA;
     
     (*saida)->linhas = linhas;
     (*saida)->colunas = colunas;
-    (*saida)->dados = malloc(linhas * colunas * sizeof *((*saida)->dados));
+    (*saida)->dados = calloc(linhas*colunas, linhas * colunas * sizeof *((*saida)->dados));
 
     if ((*saida)->dados == NULL) {
         free(*saida);
@@ -36,7 +37,7 @@ MtzStatus mtz_copiar(const Matriz *origem, Matriz **saida) {
 
     if (status != MTZ_OK) return status;
     
-    for (int i = 0; i < origem->linhas * origem->colunas; i++) {
+    for (size_t i = 0; i < origem->linhas * origem->colunas; i++) {
         ((*saida)->dados)[i] = origem->dados[i];
     }
 

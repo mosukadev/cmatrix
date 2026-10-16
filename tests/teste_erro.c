@@ -1,4 +1,5 @@
 #include "teste.h"
+#include "teste_erro.h"
 #include <libmatriz.h>
 
 #include <stdbool.h>

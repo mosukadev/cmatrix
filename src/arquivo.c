@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -11,7 +12,7 @@ MtzStatus mtz_de_vetor(size_t linhas, size_t colunas, const double *dados, Matri
     }
 
     if (linhas == 0 || colunas == 0) {
-        MTZ_ERRO_DIMENSAO;
+        return MTZ_ERRO_DIMENSAO;
     }
 
     Matriz *m = malloc(sizeof(Matriz));
@@ -55,8 +56,8 @@ MtzStatus mtz_imprimir(const Matriz *m, FILE *arquivo) {
 
     snprintf(str, tamanho, "%zu %zu\n", m->linhas, m->colunas);
 
-    for (int i = 0; i < m->linhas; i++) {
-        for (int j = 0; j < m->colunas-1; j++) {
+    for (size_t i = 0; i < m->linhas; i++) {
+        for (size_t j = 0; j < m->colunas-1; j++) {
 
             size_t tam_adicionado = snprintf(NULL, 0, "%f ", m->dados[i*m->colunas + j]);
             
@@ -145,7 +146,7 @@ MtzStatus mtz_carregar(const char *caminho, Matriz **saida) {
 
     double tmp;
 
-    for (int i = 0; i < linhas * colunas; i++) {
+    for (size_t i = 0; i < linhas * colunas; i++) {
         
         if (fscanf(arquivo, "%lf", &tmp) != 1) {
             fclose(arquivo);

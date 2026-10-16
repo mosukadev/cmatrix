@@ -5,6 +5,7 @@
 #include <libmatriz/propriedades.h>
 #include "../src/matriz_interno.h"
 #include "teste.h"
+#include "teste_operacoes.h"
 
 static double dados_a[] = {1, 2, 3, 4};
 static double dados_b[] = {5, 6, 7, 8};
@@ -14,13 +15,13 @@ static double dados_i[] = {1, 0, 0, 1};
 static double dados_zero[] = {0, 0, 0, 0};
 static Matriz *A, *B, *C, *D, *I, *Z, *R, *T, *esperada, *temp;
 
-double esperado, saida;
-MtzStatus status;
-bool veracidade;
-double eps =  1e-9;
+static double esperado, saida;
+static MtzStatus status;
+static bool veracidade;
+static double eps =  1e-9;
 
 /* mtz_somar */
-static void teste_somar_A_mais_B(void){
+void teste_somar_A_mais_B(void){
     static double dados_esperado[] = {6, 8, 10, 12};
     mtz_de_vetor(2, 2, dados_a, &A);
     mtz_de_vetor(2, 2, dados_b, &B);
@@ -31,7 +32,7 @@ static void teste_somar_A_mais_B(void){
     mtz_destruir(A); mtz_destruir(B); mtz_destruir(esperada); mtz_destruir(R);
 }
 
-static void teste_somar_dimensoes_diferentes(void){
+void teste_somar_dimensoes_diferentes(void){
     R = NULL;
     mtz_de_vetor(2, 3, dados_c, &C);
     mtz_de_vetor(3, 2, dados_d, &D);
@@ -40,7 +41,7 @@ static void teste_somar_dimensoes_diferentes(void){
     mtz_destruir(C); mtz_destruir(D); mtz_destruir(R);
 }
 
-static void teste_somar_matriz_nula(void){
+void teste_somar_matriz_nula(void){
     R = NULL;
     mtz_de_vetor(2, 2, dados_b, &B);
     status = mtz_somar(NULL, B, &R);
@@ -49,7 +50,7 @@ static void teste_somar_matriz_nula(void){
 }
 
 /* mtz_subtrair */
-static void teste_subtrair_A_menos_B(void){
+void teste_subtrair_A_menos_B(void){
     static double dados_esperado[] = {-4, -4, -4, -4};
     mtz_de_vetor(2, 2, dados_a, &A);
     mtz_de_vetor(2, 2, dados_b, &B);
@@ -60,7 +61,7 @@ static void teste_subtrair_A_menos_B(void){
     mtz_destruir(A); mtz_destruir(B); mtz_destruir(esperada); mtz_destruir(R);
 }
 
-static void teste_subtrair_de_si_mesma(void){
+void teste_subtrair_de_si_mesma(void){
     mtz_de_vetor(2, 2, dados_a, &A);
     mtz_de_vetor(2, 2, dados_a, &temp);
     mtz_de_vetor(2, 2, dados_zero, &Z);
@@ -70,7 +71,7 @@ static void teste_subtrair_de_si_mesma(void){
     mtz_destruir(A); mtz_destruir(temp); mtz_destruir(Z); mtz_destruir(R);
 }
 
-static void teste_subtrair_dimensoes_diferentes(void){
+void teste_subtrair_dimensoes_diferentes(void){
     R = NULL;
     mtz_de_vetor(2, 2, dados_a, &A);
     mtz_de_vetor(2, 3, dados_c, &C);
@@ -80,7 +81,7 @@ static void teste_subtrair_dimensoes_diferentes(void){
 }
 
 /* mtz_multiplicar */
-static void teste_multiplicar_C_por_D(void){
+void teste_multiplicar_C_por_D(void){
     static double dados_esperado[] = {58, 64, 139, 154};
     mtz_de_vetor(2, 3, dados_c, &C);
     mtz_de_vetor(3, 2, dados_d, &D);
@@ -91,7 +92,7 @@ static void teste_multiplicar_C_por_D(void){
     mtz_destruir(C); mtz_destruir(D); mtz_destruir(esperada); mtz_destruir(R);
 }
 
-static void teste_multiplicar_pela_identidade(void){
+void teste_multiplicar_pela_identidade(void){
     mtz_de_vetor(2, 2, dados_a, &A);
     mtz_de_vetor(2, 2, dados_i, &I);
     status = mtz_multiplicar(A, I, &R);
@@ -100,7 +101,7 @@ static void teste_multiplicar_pela_identidade(void){
     mtz_destruir(A); mtz_destruir(I); mtz_destruir(R);
 }
 
-static void teste_multiplicar_dimensoes_incompativeis(void){
+void teste_multiplicar_dimensoes_incompativeis(void){
     R = NULL;
     mtz_de_vetor(2, 3, dados_c, &C);
     mtz_de_vetor(2, 3, dados_c, &temp);
@@ -109,7 +110,7 @@ static void teste_multiplicar_dimensoes_incompativeis(void){
     mtz_destruir(C); mtz_destruir(temp); mtz_destruir(R);
 }
 
-static void teste_multiplicar_dimensao_do_resultado(void){
+void teste_multiplicar_dimensao_do_resultado(void){
     mtz_de_vetor(2, 3, dados_c, &C);
     mtz_de_vetor(3, 2, dados_d, &D);
     status = mtz_multiplicar(C, D, &R);
@@ -119,7 +120,7 @@ static void teste_multiplicar_dimensao_do_resultado(void){
 }
 
 /* mtz_escalar */
-static void teste_escalar_por_dois(void){
+void teste_escalar_por_dois(void){
     static double dados_esperado[] = {2, 4, 6, 8};
     mtz_de_vetor(2, 2, dados_a, &A);
     mtz_de_vetor(2, 2, dados_esperado, &esperada);
@@ -129,7 +130,7 @@ static void teste_escalar_por_dois(void){
     mtz_destruir(A); mtz_destruir(esperada); mtz_destruir(R);
 }
 
-static void teste_escalar_por_zero(void){
+void teste_escalar_por_zero(void){
     mtz_de_vetor(2, 2, dados_a, &A);
     mtz_de_vetor(2, 2, dados_zero, &Z);
     status = mtz_escalar(A, 0.0, &R);
@@ -138,7 +139,7 @@ static void teste_escalar_por_zero(void){
     mtz_destruir(A); mtz_destruir(Z); mtz_destruir(R);
 }
 
-static void teste_escalar_por_menos_um(void){
+void teste_escalar_por_menos_um(void){
     static double dados_esperado[] = {-1, -2, -3, -4};
     mtz_de_vetor(2, 2, dados_a, &A);
     mtz_de_vetor(2, 2, dados_esperado, &esperada);
@@ -148,7 +149,7 @@ static void teste_escalar_por_menos_um(void){
     mtz_destruir(A); mtz_destruir(esperada); mtz_destruir(R);
 }
 
-static void teste_escalar_matriz_nula(void){
+void teste_escalar_matriz_nula(void){
     R = NULL;
     status = mtz_escalar(NULL, 2.0, &R);
     VERIFICA_IGUAL(status, MTZ_ERRO_NULO, "escalar_matriz_nula");
@@ -156,7 +157,7 @@ static void teste_escalar_matriz_nula(void){
 }
 
 /* mtz_transpor */
-static void teste_transpor_2x3(void){
+void teste_transpor_2x3(void){
     static double dados_esperado[] = {1, 4, 2, 5, 3, 6};
     mtz_de_vetor(2, 3, dados_c, &C);
     mtz_de_vetor(3, 2, dados_esperado, &esperada);
@@ -166,7 +167,7 @@ static void teste_transpor_2x3(void){
     mtz_destruir(C); mtz_destruir(esperada); mtz_destruir(R);
 }
 
-static void teste_transpor_duas_vezes(void){
+void teste_transpor_duas_vezes(void){
     mtz_de_vetor(2, 3, dados_c, &C);
     status = mtz_transpor(C, &T);
     status = mtz_transpor(T, &R);
@@ -175,7 +176,7 @@ static void teste_transpor_duas_vezes(void){
     mtz_destruir(C); mtz_destruir(T); mtz_destruir(R);
 }
 
-static void teste_transpor_1x4(void){
+void teste_transpor_1x4(void){
     static double dados_linha[] = {1, 2, 3, 4};
     mtz_de_vetor(1, 4, dados_linha, &temp);
     mtz_de_vetor(4, 1, dados_linha, &esperada);
@@ -186,7 +187,7 @@ static void teste_transpor_1x4(void){
 }
 
 /* propriedades da matematica */
-static void teste_soma_com_zero(void){
+void teste_soma_com_zero(void){
     mtz_de_vetor(2, 2, dados_a, &A);
     mtz_de_vetor(2, 2, dados_zero, &Z);
     status = mtz_somar(A, Z, &R);
@@ -195,7 +196,7 @@ static void teste_soma_com_zero(void){
     mtz_destruir(A); mtz_destruir(Z); mtz_destruir(R);
 }
 
-static void teste_subtracao_resulta_zero(void){
+void teste_subtracao_resulta_zero(void){
     mtz_de_vetor(2, 2, dados_a, &A);
     mtz_de_vetor(2, 2, dados_a, &temp);
     mtz_de_vetor(2, 2, dados_zero, &Z);
@@ -205,7 +206,7 @@ static void teste_subtracao_resulta_zero(void){
     mtz_destruir(A); mtz_destruir(temp); mtz_destruir(Z); mtz_destruir(R);
 }
 
-static void teste_soma_comutativa(void){
+void teste_soma_comutativa(void){
     mtz_de_vetor(2, 2, dados_a, &A);
     mtz_de_vetor(2, 2, dados_b, &B);
     status = mtz_somar(A, B, &R);
@@ -215,7 +216,7 @@ static void teste_soma_comutativa(void){
     mtz_destruir(A); mtz_destruir(B); mtz_destruir(R); mtz_destruir(T);
 }
 
-static void teste_identidade_multiplicativa(void){
+void teste_identidade_multiplicativa(void){
     mtz_de_vetor(2, 2, dados_a, &A);
     mtz_de_vetor(2, 2, dados_i, &I);
     status = mtz_multiplicar(A, I, &R);
@@ -224,7 +225,7 @@ static void teste_identidade_multiplicativa(void){
     mtz_destruir(A); mtz_destruir(I); mtz_destruir(R);
 }
 
-static void teste_transposta_da_transposta(void){
+void teste_transposta_da_transposta(void){
     mtz_de_vetor(2, 3, dados_c, &C);
     status = mtz_transpor(C, &T);
     status = mtz_transpor(T, &R);
@@ -233,7 +234,7 @@ static void teste_transposta_da_transposta(void){
     mtz_destruir(C); mtz_destruir(T); mtz_destruir(R);
 }
 
-static void teste_determinante_da_transposta(void){
+void teste_determinante_da_transposta(void){
     esperado = 0.0;
     saida = 0.0;
     mtz_de_vetor(2, 2, dados_a, &A);
@@ -244,7 +245,7 @@ static void teste_determinante_da_transposta(void){
     mtz_destruir(A); mtz_destruir(T);
 }
 
-static void teste_transposta_do_produto(void){
+void teste_transposta_do_produto(void){
     mtz_de_vetor(2, 2, dados_a, &A);
     mtz_de_vetor(2, 2, dados_b, &B);
     status = mtz_multiplicar(A, B, &temp);
@@ -258,10 +259,11 @@ static void teste_transposta_do_produto(void){
     mtz_destruir(T); mtz_destruir(I); mtz_destruir(Z); mtz_destruir(R);
 }
 
-static void teste_escalar_por_um(void){
+void teste_escalar_por_um(void){
     mtz_de_vetor(2, 2, dados_a, &A);
     status = mtz_escalar(A, 1.0, &R);
     veracidade = mtz_sao_iguais(R, A, eps);
     VERIFICA_IGUAL(veracidade, true, "escalar_por_um");
     mtz_destruir(A); mtz_destruir(R);
 }
+
