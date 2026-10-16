@@ -6,13 +6,13 @@ MtzStatus mtz_criar(size_t linhas, size_t colunas, Matriz **saida) {
     if (saida == NULL) return MTZ_ERRO_NULO;
     if (linhas == 0 || colunas == 0) return MTZ_ERRO_DIMENSAO;
     
-    *saida = calloc(1, sizeof **saida);
+    *saida = malloc(sizeof **saida);
     
     if (*saida == NULL) return MTZ_ERRO_MEMORIA;
     
     (*saida)->linhas = linhas;
     (*saida)->colunas = colunas;
-    (*saida)->dados = malloc(linhas * colunas * sizeof *((*saida)->dados));
+    (*saida)->dados = calloc(linhas*colunas, linhas * colunas * sizeof *((*saida)->dados));
 
     if ((*saida)->dados == NULL) {
         free(*saida);

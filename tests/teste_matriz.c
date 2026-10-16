@@ -36,7 +36,7 @@ void mtz_verificar_3x4_zeros(void) {
 
     for (size_t i = 0; i < 3 && correto; i++) {
         for (size_t j = 0; j < 4; j++) {
-            double valor;
+            double valor = 0.0;
             status = mtz_obter(m, i, j, &valor);
 
             if (status != MTZ_OK || fabs(valor) >= EPSILON) {
