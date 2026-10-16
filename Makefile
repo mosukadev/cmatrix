@@ -15,6 +15,8 @@ ESTATICA = lib/libmatriz.a
 SRC = $(wildcard src/*.c)
 OBJ = $(patsubst src/%.c,build/est/%.o,$(SRC))
 OBJ_DIN = $(patsubst src/%.c,build/din/%.o,$(SRC))
+TEST_SRC = $(wildcard tests/teste_*.c)
+TEST_HEADERS = $(wildcard tests/teste_*.h) tests/teste.h
 
 # Declarar alvos que não são arquivos
 .PHONY: all clean run test install run-static run-dynamic valgrind uninstall
@@ -58,12 +60,13 @@ bin/app_dinamico: app/principal.c $(DINAMICA)
 # Por padrão, rodamos com estáticos, mas acho que isso seja mudável
 run: run-static
 
-# Criar arquivo teste e sobrescreve em cada teste, já que compila
-test: $(ESTATICA)
+# Compila o runner e todas as suítes em um único executável
+build/test_runner: tests/teste.c $(TEST_SRC) $(TEST_HEADERS) $(ESTATICA)
 	@mkdir -p build
-	@fail=0; for f in tests/teste_*.c; do \
-		$(CC) $(CFLAGS) -Itests $$f tests/teste.c $(ESTATICA) -lm -o build/teste && build/teste || fail=1; \
-	done; exit $$fail
+	$(CC) $(CFLAGS) -Itests tests/teste.c $(TEST_SRC) $(ESTATICA) -lm -o $@
+
+test: build/test_runner
+	./build/test_runner
 
 # Instala as libs no usr/local
 install: $(ESTATICA) $(DINAMICA)
@@ -80,12 +83,9 @@ run-dynamic: bin/app_dinamico
 	./bin/app_dinamico
 
 # Confere vazamentos, ou seja, malloc sem free etc.
-valgrind: all
+valgrind: all build/test_runner
 	valgrind --leak-check=full --error-exitcode=1 ./bin/app_estatico
-	@mkdir -p build
-	@for f in tests/teste_*.c; do \
-		$(CC) $(CFLAGS) -Itests $$f tests/teste.c $(ESTATICA) -lm -o build/teste && valgrind --leak-check=full --error-exitcode=1 build/teste || exit 1; \
-	done
+	valgrind --leak-check=full --error-exitcode=1 ./build/test_runner
 
 # Tira do usr/local
 uninstall:

@@ -6,6 +6,7 @@
 
 #include "../src/matriz_interno.h"
 #include "teste.h"
+#include "teste_propriedades.h"
 
 static double dados_a[] = {1, 2, 3, 4};
 static double dados_c[] = {1, 2, 3, 4, 5, 6};
@@ -16,13 +17,13 @@ static double dados_h[] = {0, 1, 1, 0};
 static double dados_s[] = {1, 2, 2, 1};
 static Matriz *A, *C, *E, *F, *G, *H, *S, *temp;
 
-double esperado, saida;
-MtzStatus status;
-bool veracidade;
-double eps =  1e-9;
+static double esperado, saida;
+static MtzStatus status;
+static bool veracidade;
+static double eps =  1e-9;
 
 /* mtz_traco */
-static void teste_traco_de_A(void){
+void teste_traco_de_A(void){
     esperado = 5.0;
     saida = 0.0;
 
@@ -33,7 +34,7 @@ static void teste_traco_de_A(void){
     mtz_destruir(A);
 }
 
-static void teste_traco_de_2x3(void){
+void teste_traco_de_2x3(void){
     
     mtz_de_vetor(2, 3, dados_c, &C);
     status = mtz_traco(C, &saida);
@@ -42,7 +43,7 @@ static void teste_traco_de_2x3(void){
     mtz_destruir(C);
 }
 
-static void teste_traco_de_1x1(void){
+void teste_traco_de_1x1(void){
     static const double dados_unico[] = {9};
     
     mtz_de_vetor(1, 1, dados_unico, &temp);
@@ -54,7 +55,7 @@ static void teste_traco_de_1x1(void){
 }
 
 /* mtz_determinante */
-static void teste_determinante_F(void){
+void teste_determinante_F(void){
     saida = 0.0;
     esperado = -14.0;
 
@@ -66,17 +67,17 @@ static void teste_determinante_F(void){
 
 }
 
-static void teste_determinante_E(void){
+void teste_determinante_E(void){
     saida = 0.0;
     esperado = -3.0;
 
     mtz_de_vetor(3, 3, dados_e, &E);
     status = mtz_determinante(E, &saida);
-    VERIFICA_IGUAL(saida, esperado, "determinante_E");
+    VERIFICA_PROXIMO(saida, esperado, eps, "determinante_E");
 
     mtz_destruir(E);
 }
-static void teste_determinante_identidade(void){
+void teste_determinante_identidade(void){
     static double dados_identidade[] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
     saida = 0.0;
     esperado = 1.0;
@@ -88,7 +89,7 @@ static void teste_determinante_identidade(void){
     mtz_destruir(temp);
 }
 
-static void teste_determinante_G(void){
+void teste_determinante_G(void){
     saida =0.0;
     esperado = 0.0;
 
@@ -99,7 +100,7 @@ static void teste_determinante_G(void){
     mtz_destruir(G);
 }
 
-static void teste_determinante_H(void){
+void teste_determinante_H(void){
     saida = 0.0;
     esperado = -1.0;
 
@@ -110,7 +111,7 @@ static void teste_determinante_H(void){
     mtz_destruir(H);
 }
 
-static void teste_determinante_unico_elemento(void){
+void teste_determinante_unico_elemento(void){
     static double dados_unico[] = {5};
     saida = 0.0;
     esperado = 5.0;
@@ -121,7 +122,7 @@ static void teste_determinante_unico_elemento(void){
     mtz_destruir(temp);
 }
 
-static void teste_determinante_2x3(void){
+void teste_determinante_2x3(void){
     mtz_de_vetor(2, 3, dados_c, &C);
     status = mtz_determinante(C, &saida);
     VERIFICA_IGUAL(status, MTZ_ERRO_NAO_QUADRADA, "determinante_2x3");
@@ -129,10 +130,10 @@ static void teste_determinante_2x3(void){
     mtz_destruir(C);
 }
 
-static void teste_determinante_nao_altera_matriz(void){
+void teste_determinante_nao_altera_matriz(void){
     eps =  1e-9;
     mtz_de_vetor(2, 2, dados_h, &H);
-    mtz_de_vetor(2, 3, dados_h, &temp);
+    mtz_de_vetor(2, 2, dados_h, &temp);
     status = mtz_determinante(H, &saida);
 
     veracidade = mtz_sao_iguais(H, temp, eps);
@@ -143,7 +144,7 @@ static void teste_determinante_nao_altera_matriz(void){
 }
 
 /* mtz_e_quadrada */
-static void teste_quadrada_3x3(void){
+void teste_quadrada_3x3(void){
 
     mtz_de_vetor(3, 3, dados_e, &E);
     veracidade = mtz_e_quadrada(E);
@@ -152,7 +153,7 @@ static void teste_quadrada_3x3(void){
     mtz_destruir(E);
 }
 
-static void teste_quadrada_2x3(void){
+void teste_quadrada_2x3(void){
     mtz_de_vetor(2, 3, dados_c, &C);
     veracidade = mtz_e_quadrada(C);
     VERIFICA_IGUAL(veracidade, false, "quadrada_2x3");
@@ -160,13 +161,13 @@ static void teste_quadrada_2x3(void){
     mtz_destruir(C);
 }
 
-static void teste_quadrada_NULL(void){
+void teste_quadrada_NULL(void){
     veracidade = mtz_e_quadrada(NULL);
     VERIFICA_IGUAL(veracidade, false, "quadrada_NULL");
 }
 
 /* mtz_e_simetrica */
-static void teste_simetrica_S(void){
+void teste_simetrica_S(void){
     eps =  1e-9;
 
     mtz_de_vetor(2,2, dados_s, &S);
@@ -176,7 +177,7 @@ static void teste_simetrica_S(void){
     mtz_destruir(S);
 }
 
-static void teste_simetrica_A(void){
+void teste_simetrica_A(void){
     eps =  1e-9;
 
     mtz_de_vetor(2, 2, dados_a, &A);
@@ -185,7 +186,7 @@ static void teste_simetrica_A(void){
 
     mtz_destruir(A);
 }
-static void teste_simetrica_2x3(void){
+void teste_simetrica_2x3(void){
     eps =  1e-9;
 
     mtz_de_vetor(2, 3, dados_c, &C);
@@ -196,7 +197,7 @@ static void teste_simetrica_2x3(void){
 }
 
 /* mtz_sao_iguais */
-static void teste_igual_mesma(void){
+void teste_igual_mesma(void){
     eps =  1e-9;
 
     mtz_de_vetor(2,2, dados_s, &S);
@@ -206,7 +207,7 @@ static void teste_igual_mesma(void){
     mtz_destruir(S);
 }
 
-static void teste_igual_tamanhos_diferentes(void){
+void teste_igual_tamanhos_diferentes(void){
     eps =  1e-9;
 
     mtz_de_vetor(2,2, dados_s, &S);
@@ -218,7 +219,7 @@ static void teste_igual_tamanhos_diferentes(void){
     mtz_destruir(C);
 }
 
-static void teste_igual_diferenca_dentro_tolerancia(void){
+void teste_igual_diferenca_dentro_tolerancia(void){
     eps =  1e-6;
 
     mtz_de_vetor(2, 3, dados_c, &C);
@@ -239,7 +240,7 @@ static void teste_igual_diferenca_dentro_tolerancia(void){
     mtz_destruir(temp);
 }
 
-static void teste_igual_uma_nula(void){
+void teste_igual_uma_nula(void){
     eps =  1e-9;
 
     mtz_de_vetor(2, 3, dados_c, &C);

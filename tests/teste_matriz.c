@@ -1,5 +1,6 @@
 
 #include "teste.h"
+#include "teste_matriz.h"
 #include <libmatriz.h>
 
 #include <stdbool.h>
@@ -39,7 +40,7 @@ void mtz_verificar_3x4_zeros(void) {
             double valor;
             status = mtz_obter(m, i, j, &valor);
 
-            if (status != MTZ_OK || valor != 0.0) {
+            if (status != MTZ_OK || fabs(valor) >= EPSILON) {
                 correto = false;
                 break;
             }

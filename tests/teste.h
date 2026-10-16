@@ -43,7 +43,7 @@ extern int g_testes_falharam;
     } \
     else { \
         g_testes_falharam++; \
-        printf("[FALHA] %s (%s:%d): esperado %d, obtido %d\n", nome_teste, __FILE__, __LINE__, esperado, obtido); \
+        printf("[FALHA] %s (%s:%d): esperado %Lg, obtido %Lg\n", nome_teste, __FILE__, __LINE__, (long double)(esperado), (long double)(obtido)); \
     } \
 } while (0)
 
