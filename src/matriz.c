@@ -12,7 +12,7 @@ MtzStatus mtz_criar(size_t linhas, size_t colunas, Matriz **saida) {
     
     (*saida)->linhas = linhas;
     (*saida)->colunas = colunas;
-    (*saida)->dados = calloc(linhas*colunas, linhas * colunas * sizeof *((*saida)->dados));
+    (*saida)->dados = malloc(linhas * colunas * sizeof *((*saida)->dados));
 
     if ((*saida)->dados == NULL) {
         free(*saida);
