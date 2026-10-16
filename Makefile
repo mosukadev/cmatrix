@@ -1,7 +1,7 @@
 CC = gcc
 
 #Flags pra ver erros, incremental etc
-CFLAGS = -Wall -Wextra -Iinclude  -Wpedantic -g
+CFLAGS = -Wall -Wextra -Iinclude -Iinclude/libmatriz -Wpedantic -g
 #GLags para grantir o inncrmental, especialmente cabeçalho dos .o
 DFLAGS = -MMD -MP
 
@@ -62,7 +62,7 @@ run: run-static
 test: $(ESTATICA)
 	@mkdir -p build
 	@fail=0; for f in tests/teste_*.c; do \
-		$(CC) $(CFLAGS) -Itests $$f $(ESTATICA) -lm -o build/teste && build/teste || fail=1; \
+		$(CC) $(CFLAGS) -Itests $$f tests/teste.c $(ESTATICA) -lm -o build/teste && build/teste || fail=1; \
 	done; exit $$fail
 
 # Instala as libs no usr/local
@@ -85,7 +85,7 @@ valgrind: all
 	valgrind --leak-check=full --error-exitcode=1 ./bin/app_estatico
 	@mkdir -p build
 	@for f in tests/teste_*.c; do \
-		$(CC) $(CFLAGS) -Itests $$f $(ESTATICA) -lm -o build/teste && valgrind --leak-check=full --error-exitcode=1 build/teste || exit 1; \
+		$(CC) $(CFLAGS) -Itests $$f tests/teste.c $(ESTATICA) -lm -o build/teste && valgrind --leak-check=full --error-exitcode=1 build/teste || exit 1; \
 	done
 
 # Tira do usr/local
