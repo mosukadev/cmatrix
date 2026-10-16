@@ -10,7 +10,7 @@
 
 void mtz_criar_3x4(void) {
     Matriz *m = NULL;
-    MtzStatus status = mtz_criar(3, 4, &m);
+    MtzStatus status = mtz_criar(3, 5, &m);
 
     if (status != MTZ_OK) {
         VERIFICA(false, "mtz_criar_3x4");
