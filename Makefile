@@ -57,8 +57,8 @@ bin/app_dinamico: app/principal.c $(DINAMICA)
 # Include dos .d pra incremental
 -include $(OBJ:.o=.d) $(OBJ_DIN:.o=.d) bin/app_estatico.d bin/app_dinamico.d
 
-# Por padrão, rodamos com estáticos, mas acho que isso seja mudável
-run: run-static
+# Por padrão, rodamos com dinâmicos, mas acho que isso seja mudável
+run: run-dynamic
 
 # Compila o runner e todas as suítes em um único executável
 build/test_runner: tests/teste.c $(TEST_SRC) $(TEST_HEADERS) $(ESTATICA)
