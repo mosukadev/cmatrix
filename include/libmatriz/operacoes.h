@@ -5,6 +5,7 @@
 #include "matriz.h"
 
 /**
+ * @file operacoes.h
  * @brief Soma duas matrizes.
  *
  * As matrizes devem possuir as mesmas dimensões.

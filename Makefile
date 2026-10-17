@@ -19,7 +19,7 @@ TEST_SRC = $(wildcard tests/teste_*.c)
 TEST_HEADERS = $(wildcard tests/teste_*.h) tests/teste.h
 
 # Declarar alvos que não são arquivos
-.PHONY: all clean run test install run-static run-dynamic valgrind uninstall
+.PHONY: all clean run test install run-static run-dynamic valgrind uninstall docs clean-docs
 
 all: $(ESTATICA) $(DINAMICA)  bin/app_estatico bin/app_dinamico
 
@@ -96,3 +96,9 @@ uninstall:
 # Cleana as pastas
 clean: 
 	rm -rf build lib bin
+
+docs:
+	doxygen Doxyfile
+
+clean-docs:
+	rm -rf docs/

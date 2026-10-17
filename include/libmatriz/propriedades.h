@@ -7,6 +7,7 @@
 #include "matriz.h"
 
 /**
+ * @file propriedades.h
  * @brief Calcula o traço de uma matriz.
  *
  * O traço é a soma dos elementos da diagonal principal.
