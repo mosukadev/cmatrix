@@ -8,6 +8,7 @@
 typedef struct Matriz Matriz;
 
 /**
+ * @file matriz.h
  * @brief Cria uma matriz e armazena seu endereço em `saida`.
  * @param linhas Quantidade de linhas da matriz.
  * @param colunas Quantidade de colunas da matriz.

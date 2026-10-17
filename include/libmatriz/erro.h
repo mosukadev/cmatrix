@@ -2,6 +2,7 @@
 #define ERRO_H
 
 /**
+ * @file erro.h
  * @brief Códigos de status retornados pelas funções da biblioteca.
  */
 typedef enum {

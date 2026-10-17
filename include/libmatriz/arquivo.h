@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 /**
+ * @file arquivo.h
  * @brief Cria uma matriz a partir de um vetor de dados.
  * @param linhas Quantidade de linhas da matriz.
  * @param colunas Quantidade de colunas da matriz.
