@@ -6,10 +6,12 @@ on:
     branches:
       - main
       - test/CI
+      - develop
   push:
     branches: 
       - main
       - test/CI
+      - develop
 
 jobs:
   test:
