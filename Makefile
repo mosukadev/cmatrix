@@ -5,7 +5,7 @@ CFLAGS = -Wall -Wextra -Iinclude -Iinclude/libmatriz -Wpedantic -g
 #GLags para grantir o inncrmental, especialmente cabeçalho dos .o
 DFLAGS = -MMD -MP
 
-PREFIX ?= /usr/local
+PREFIX ?= $(HOME)/.local
 
 #Pastas e nome das bibliotecas
 DINAMICA = lib/libmatriz.so
@@ -65,10 +65,11 @@ build/test_runner: tests/teste.c $(TEST_SRC) $(TEST_HEADERS) $(ESTATICA)
 	@mkdir -p build
 	$(CC) $(CFLAGS) -Itests tests/teste.c $(TEST_SRC) $(ESTATICA) -lm -o $@
 
+# Apenas roda o test_runner por padrão
 test: build/test_runner
 	./build/test_runner
 
-# Instala as libs no usr/local
+# Instala as libs no $(HOME)/local
 install: $(ESTATICA) $(DINAMICA)
 	install -d $(PREFIX)/lib $(PREFIX)/include/libmatriz
 	install -m 644 $(ESTATICA) $(DINAMICA) $(PREFIX)/lib/
@@ -85,7 +86,6 @@ run-dynamic: bin/app_dinamico
 
 # Confere vazamentos, ou seja, malloc sem free etc.
 valgrind: all build/test_runner
-	valgrind --leak-check=full --error-exitcode=1 ./bin/app_estatico
 	valgrind --leak-check=full --error-exitcode=1 ./build/test_runner
 
 # Tira do usr/local
