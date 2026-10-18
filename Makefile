@@ -23,6 +23,9 @@ TEST_HEADERS = $(wildcard tests/teste_*.h) tests/teste.h
 
 all: $(ESTATICA) $(DINAMICA)  bin/app_estatico bin/app_dinamico
 
+dynamic: $(DINAMICA) bin/app_dinamico
+
+static: $(ESTATICA) bin/app_estatico
 
 #Criação da lib estática
 $(ESTATICA): $(OBJ)
@@ -56,6 +59,8 @@ bin/app_dinamico: app/principal.c $(DINAMICA)
 
 # Include dos .d pra incremental
 -include $(OBJ:.o=.d) $(OBJ_DIN:.o=.d) bin/app_estatico.d bin/app_dinamico.d
+
+
 
 # Por padrão, rodamos com dinâmicos, mas acho que isso seja mudável
 run: run-dynamic
