@@ -1,4 +1,4 @@
-# libcmatrix
+# cmatrix
 
 Biblioteca em C para trabalhar com matrizes de `double`: criação, cópia, acesso
 a elementos, soma, subtração, multiplicação, transposição, traço, determinante,
@@ -158,12 +158,18 @@ testes e `lib/libcmatrix.a`). Se qualquer um deles mudar, o executável de teste
 | Alvo | O que faz |
 |---|---|
 | `make` / `make all` | Compila `lib/libcmatrix.a`, `lib/libcmatrix.so`, `bin/app_estatico` e `bin/app_dinamico`. |
+| `make dynamic` | Compila `lib/libcmatrix.so` e `bin/app_dinamico`. |
+| `make static` | Compila `lib/libcmatrix.a` e `bin/app_estatico`. |
+| `make lib/libcmatrix.so` | Compila somente a biblioteca dinâmica, sem gerar o executável cliente. |
+| `make lib/libcmatrix.a` | Compila somente a biblioteca estática, sem gerar o executável cliente. |
 | `make clean` | Remove `build/`, `lib/` e `bin/`. |
 | `make run` | Compila se necessário e executa a aplicação (versão dinâmica). |
 | `make run-static` | Executa a aplicação ligada à biblioteca estática. |
 | `make run-dynamic` | Executa a aplicação ligada à biblioteca dinâmica. |
 | `make test` | Compila e executa todos os testes. Termina com erro se algum falhar. |
 | `make valgrind` | Executa os testes sob o valgrind (`--leak-check=full`) para detectar vazamentos. |
+| `make docs` | Gera a documentação HTML com o Doxygen, usando as configurações de `Doxyfile`. |
+| `make clean-docs` | Remove a pasta `docs/` e a documentação gerada. |
 | `make install` | Instala as bibliotecas e os cabeçalhos públicos em `$(PREFIX)`. |
 | `make uninstall` | Remove as duas bibliotecas e todos os cabeçalhos instalados em `$(PREFIX)`. |
 

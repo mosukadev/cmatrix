@@ -19,7 +19,7 @@ TEST_SRC = $(wildcard tests/teste_*.c)
 TEST_HEADERS = $(wildcard tests/teste_*.h) tests/teste.h
 
 # Declarar alvos que não são arquivos
-.PHONY: all clean run test install run-static run-dynamic valgrind uninstall docs clean-docs
+.PHONY: all clean run test install run-static run-dynamic valgrind uninstall docs clean-docs dynamic static
 
 all: $(ESTATICA) $(DINAMICA)  bin/app_estatico bin/app_dinamico
 
