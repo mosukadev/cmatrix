@@ -1,6 +1,6 @@
 #include "teste.h"
 #include "teste_matriz.h"
-#include <libmatriz.h>
+#include <libcmatrix.h>
 
 #include <stdbool.h>
 #include <stdlib.h>

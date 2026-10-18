@@ -1,4 +1,4 @@
-# libmatriz
+# libcmatrix
 
 Biblioteca em C para trabalhar com matrizes de `double`: criação, cópia, acesso
 a elementos, soma, subtração, multiplicação, transposição, traço, determinante,
@@ -49,8 +49,8 @@ sudo apt install build-essential git valgrind tree
 ```
 projeto_c/
 ├── include/                  # Interface pública (é o que o cliente enxerga)
-│   ├── libmatriz.h           # Cabeçalho único: reúne os cinco módulos
-│   └── libmatriz/
+│   ├── libcmatrix.h           # Cabeçalho único: reúne os cinco módulos
+│   └── libcmatrix/
 │       ├── erro.h            # Códigos de erro e mensagens
 │       ├── matriz.h          # Criação, cópia, destruição e acesso
 │       ├── operacoes.h       # Soma, subtração, multiplicação, escalar, transposta
@@ -84,7 +84,7 @@ A compilação cria, fora do controle de versão (veja `.gitignore`):
 | `build/est/` | objetos da biblioteca estática e arquivos de dependência `.d` |
 | `build/din/` | objetos compilados com `-fPIC` para a biblioteca dinâmica |
 | `build/test_runner` | executável dos testes |
-| `lib/` | `libmatriz.a` e `libmatriz.so` |
+| `lib/` | `libcmatrix.a` e `libcmatrix.so` |
 | `bin/` | `app_estatico` e `app_dinamico` |
 
 ### Interface pública e tipo opaco
@@ -105,16 +105,16 @@ make
 Gera as duas bibliotecas e os dois executáveis do cliente:
 
 ```
-src/*.c ── gcc -c ────────▶ build/est/*.o ── ar rcs ──────▶ lib/libmatriz.a
-src/*.c ── gcc -c -fPIC ──▶ build/din/*.o ── gcc -shared ─▶ lib/libmatriz.so
+src/*.c ── gcc -c ────────▶ build/est/*.o ── ar rcs ──────▶ lib/libcmatrix.a
+src/*.c ── gcc -c -fPIC ──▶ build/din/*.o ── gcc -shared ─▶ lib/libcmatrix.so
 
-app/principal.c + lib/libmatriz.a  ─▶ bin/app_estatico
-app/principal.c + -Llib -lmatriz  ─▶ bin/app_dinamico
+app/principal.c + lib/libcmatrix.a  ─▶ bin/app_estatico
+app/principal.c + -Llib -lcmatrix  ─▶ bin/app_dinamico
 ```
 
-O executável dinâmico é ligado pelo nome da biblioteca (`-lmatriz`), e o
+O executável dinâmico é ligado pelo nome da biblioteca (`-lcmatrix`), e o
 Makefile define um `rpath` relativo ao executável (`$ORIGIN/../lib`) para
-localizar `lib/libmatriz.so` mesmo quando o diretório de trabalho muda.
+localizar `lib/libcmatrix.so` mesmo quando o diretório de trabalho muda.
 
 Flags usadas (variável `CFLAGS` do Makefile):
 
@@ -122,14 +122,14 @@ Flags usadas (variável `CFLAGS` do Makefile):
 |---|---|
 | `-Wall -Wextra -Wpedantic` | ativa os avisos do compilador (o projeto compila sem nenhum) |
 | `-g` | inclui informação de depuração (GDB e valgrind) |
-| `-Iinclude` | permite `#include <libmatriz.h>` |
-| `-Iinclude/libmatriz` | permite que os arquivos de `src/` e `tests/` incluam os cabeçalhos dos módulos pelo nome (por exemplo `"erro.h"`) |
+| `-Iinclude` | permite `#include <libcmatrix.h>` |
+| `-Iinclude/libcmatrix` | permite que os arquivos de `src/` e `tests/` incluam os cabeçalhos dos módulos pelo nome (por exemplo `"erro.h"`) |
 
 Além delas: `-MMD -MP` (`DFLAGS`) geram os arquivos de dependência dos objetos
 da biblioteca e dos executáveis do cliente; `-fPIC` é usada só nos objetos da
 biblioteca dinâmica; `-Itests` é usada só na compilação dos testes. A
 aplicação cliente e quem usa a biblioteca instalada devem incluir apenas
-`<libmatriz.h>`.
+`<libcmatrix.h>`.
 
 ### Compilação incremental
 
@@ -150,14 +150,14 @@ mexer em um deles não recompila os demais.
 Os testes **não** usam arquivos `.d`: o alvo `build/test_runner` compila
 `tests/teste.c` e todos os `tests/teste_*.c` em um único comando, e suas
 dependências estão listadas à mão no Makefile (os fontes e cabeçalhos dos
-testes e `lib/libmatriz.a`). Se qualquer um deles mudar, o executável de testes
+testes e `lib/libcmatrix.a`). Se qualquer um deles mudar, o executável de testes
 é refeito por inteiro.
 
 ## Alvos do Makefile
 
 | Alvo | O que faz |
 |---|---|
-| `make` / `make all` | Compila `lib/libmatriz.a`, `lib/libmatriz.so`, `bin/app_estatico` e `bin/app_dinamico`. |
+| `make` / `make all` | Compila `lib/libcmatrix.a`, `lib/libcmatrix.so`, `bin/app_estatico` e `bin/app_dinamico`. |
 | `make clean` | Remove `build/`, `lib/` e `bin/`. |
 | `make run` | Compila se necessário e executa a aplicação (versão dinâmica). |
 | `make run-static` | Executa a aplicação ligada à biblioteca estática. |
@@ -190,8 +190,8 @@ libera toda a memória.
 Para comprovar que cada versão usa a biblioteca esperada:
 
 ```bash
-ldd bin/app_estatico    # não lista libmatriz
-ldd bin/app_dinamico    # lista libmatriz.so
+ldd bin/app_estatico    # não lista libcmatrix
+ldd bin/app_dinamico    # lista libcmatrix.so
 ```
 
 ## Testes
@@ -259,21 +259,21 @@ sudo make install PREFIX=/usr/local
 O que é instalado:
 
 ```
-$(PREFIX)/lib/libmatriz.a
-$(PREFIX)/lib/libmatriz.so
-$(PREFIX)/include/libmatriz.h
-$(PREFIX)/include/libmatriz/{erro,matriz,operacoes,propriedades,arquivo}.h
+$(PREFIX)/lib/libcmatrix.a
+$(PREFIX)/lib/libcmatrix.so
+$(PREFIX)/include/libcmatrix.h
+$(PREFIX)/include/libcmatrix/{erro,matriz,operacoes,propriedades,arquivo}.h
 ```
 
 O arquivo `src/matriz_interno.h` **não** é instalado, pois é interno.
 
 ```bash
-ls $HOME/.local/lib $HOME/.local/include/libmatriz   # conferir
+ls $HOME/.local/lib $HOME/.local/include/libcmatrix   # conferir
 make uninstall PREFIX=$HOME/.local                   # desfazer
 ```
 
 O `make uninstall` remove as duas bibliotecas, o cabeçalho principal
-`$(PREFIX)/include/libmatriz.h` e a pasta `$(PREFIX)/include/libmatriz/`.
+`$(PREFIX)/include/libcmatrix.h` e a pasta `$(PREFIX)/include/libcmatrix/`.
 
 ## Usando a biblioteca em outro programa
 
@@ -282,7 +282,7 @@ precisa incluir o cabeçalho único:
 
 ```c
 #include <stdio.h>
-#include <libmatriz.h>
+#include <libcmatrix.h>
 
 int main(void) {
     const double v[] = {1, 2, 3, 4};
@@ -303,16 +303,16 @@ int main(void) {
 **Ligação estática** (a biblioteca é copiada para dentro do executável):
 
 ```bash
-gcc exemplo.c -I$HOME/.local/include $HOME/.local/lib/libmatriz.a -lm -o exemplo_est
+gcc exemplo.c -I$HOME/.local/include $HOME/.local/lib/libcmatrix.a -lm -o exemplo_est
 ```
 
-Passa-se o caminho completo do `.a`. Com `-lmatriz`, o ligador escolheria o
+Passa-se o caminho completo do `.a`. Com `-lcmatrix`, o ligador escolheria o
 `.so`, porque as duas versões ficam no mesmo diretório.
 
 **Ligação dinâmica** (a biblioteca é carregada na hora de executar):
 
 ```bash
-gcc exemplo.c -I$HOME/.local/include -L$HOME/.local/lib -lmatriz -lm \
+gcc exemplo.c -I$HOME/.local/include -L$HOME/.local/lib -lcmatrix -lm \
     -Wl,-rpath,$HOME/.local/lib -o exemplo_din
 ```
 

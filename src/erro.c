@@ -1,4 +1,4 @@
-#include <libmatriz/erro.h>
+#include <libcmatrix/erro.h>
 
 const char *mtz_mensagem_erro(MtzStatus status) {
     switch (status) {
