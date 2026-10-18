@@ -243,17 +243,19 @@ make valgrind
 
 ## Instalação
 
-Para instalar **sem privilégios de administrador**, escolha um prefixo no seu
-diretório pessoal:
+O prefixo padrão é `/usr/local`, para que compiladores e carregador dinâmico
+encontrem a biblioteca no sistema. Instale globalmente com:
+
+```bash
+sudo make install
+sudo ldconfig
+```
+
+`ldconfig` atualiza o cache do carregador dinâmico. Para instalar **sem
+privilégios de administrador**, escolha um prefixo pessoal:
 
 ```bash
 make install PREFIX=$HOME/.local
-```
-
-O prefixo padrão é `$(HOME)/.local`. Para instalar no sistema:
-
-```bash
-sudo make install PREFIX=/usr/local
 ```
 
 O que é instalado:
@@ -267,18 +269,16 @@ $(PREFIX)/include/libcmatrix/{erro,matriz,operacoes,propriedades,arquivo}.h
 
 O arquivo `src/matriz_interno.h` **não** é instalado, pois é interno.
 
-```bash
-ls $HOME/.local/lib $HOME/.local/include/libcmatrix   # conferir
-make uninstall PREFIX=$HOME/.local                   # desfazer
-```
+Para desfazer a instalação global, execute `sudo make uninstall`. Para desfazer
+a instalação pessoal, execute `make uninstall PREFIX=$HOME/.local`.
 
 O `make uninstall` remove as duas bibliotecas, o cabeçalho principal
 `$(PREFIX)/include/libcmatrix.h` e a pasta `$(PREFIX)/include/libcmatrix/`.
 
 ## Usando a biblioteca em outro programa
 
-Depois de instalada (aqui com `PREFIX=$HOME/.local`), um programa externo só
-precisa incluir o cabeçalho único:
+Depois da instalação global, um programa externo só precisa incluir o
+cabeçalho único:
 
 ```c
 #include <stdio.h>
@@ -303,7 +303,7 @@ int main(void) {
 **Ligação estática** (a biblioteca é copiada para dentro do executável):
 
 ```bash
-gcc exemplo.c -I$HOME/.local/include $HOME/.local/lib/libcmatrix.a -lm -o exemplo_est
+gcc exemplo.c /usr/local/lib/libcmatrix.a -lm -o exemplo_est
 ```
 
 Passa-se o caminho completo do `.a`. Com `-lcmatrix`, o ligador escolheria o
@@ -312,13 +312,13 @@ Passa-se o caminho completo do `.a`. Com `-lcmatrix`, o ligador escolheria o
 **Ligação dinâmica** (a biblioteca é carregada na hora de executar):
 
 ```bash
-gcc exemplo.c -I$HOME/.local/include -L$HOME/.local/lib -lcmatrix -lm \
-    -Wl,-rpath,$HOME/.local/lib -o exemplo_din
+gcc exemplo.c -lcmatrix -lm -o exemplo_din
 ```
 
-O `-Wl,-rpath` grava no executável onde procurar a `.so`. Sem ele, é preciso
-`LD_LIBRARY_PATH=$HOME/.local/lib ./exemplo_din`, caso contrário o programa
-não inicia ("cannot open shared object file").
+Como `/usr/local/include` e `/usr/local/lib` são caminhos padrão, não é preciso
+passar `-I` nem `-L`. Para uma instalação pessoal, passe os caminhos ao
+compilador (`-I$HOME/.local/include -L$HOME/.local/lib`) e configure a busca
+dinâmica com `-Wl,-rpath,$HOME/.local/lib` ou `LD_LIBRARY_PATH`.
 
 ### Estática × dinâmica
 
@@ -436,7 +436,8 @@ git checkout v1.0
 make
 make test
 make run
-make install PREFIX=$HOME/.local
+sudo make install
+sudo ldconfig
 ```
 
 Para rodar a demonstração completa (itens da apresentação), use
