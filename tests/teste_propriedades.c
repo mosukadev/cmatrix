@@ -1,8 +1,8 @@
 #include <stdio.h>
 
-#include <libmatriz/arquivo.h>
-#include <libmatriz/matriz.h>
-#include <libmatriz/propriedades.h>
+#include <libcmatrix/arquivo.h>
+#include <libcmatrix/matriz.h>
+#include <libcmatrix/propriedades.h>
 
 #include "../src/matriz_interno.h"
 #include "teste.h"

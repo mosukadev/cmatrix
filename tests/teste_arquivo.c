@@ -4,7 +4,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include <libmatriz.h>
+#include <libcmatrix.h>
 #include "teste.h"
 
 void mtz_de_vetor_2x3() {

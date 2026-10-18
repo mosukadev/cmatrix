@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <libmatriz/matriz.h>
-#include <libmatriz/propriedades.h>
+#include <libcmatrix/matriz.h>
+#include <libcmatrix/propriedades.h>
 #include "matriz_interno.h"
-#include <libmatriz/arquivo.h>
+#include <libcmatrix/arquivo.h>
 #include <stdbool.h>
 
 

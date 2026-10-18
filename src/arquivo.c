@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "libmatriz/arquivo.h"
+#include <libcmatrix/arquivo.h>
 #include "matriz_interno.h"
 
 MtzStatus mtz_de_vetor(size_t linhas, size_t colunas, const double *dados, Matriz **saida) {

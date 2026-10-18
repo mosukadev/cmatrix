@@ -1,5 +1,5 @@
 #include "matriz_interno.h"
-#include <libmatriz/matriz.h>
+#include <libcmatrix/matriz.h>
 #include <stddef.h>
 
 MtzStatus mtz_criar(size_t linhas, size_t colunas, Matriz **saida) {

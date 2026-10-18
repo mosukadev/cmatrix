@@ -1,15 +1,15 @@
 CC = gcc
 
 #Flags pra ver erros, incremental etc
-CFLAGS = -Wall -Wextra -Iinclude -Iinclude/libmatriz -Wpedantic -g
+CFLAGS = -Wall -Wextra -Iinclude -Iinclude/libcmatrix -Wpedantic -g
 #GLags para grantir o inncrmental, especialmente cabeçalho dos .o
 DFLAGS = -MMD -MP
 
 PREFIX ?= $(HOME)/.local
 
 #Pastas e nome das bibliotecas
-DINAMICA = lib/libmatriz.so
-ESTATICA = lib/libmatriz.a
+DINAMICA = lib/libcmatrix.so
+ESTATICA = lib/libcmatrix.a
 
 # Arquivos fonte
 SRC = $(wildcard src/*.c)
@@ -51,7 +51,7 @@ bin/app_estatico: app/principal.c $(ESTATICA)
 # Gera executável da principal.c linkando com a lib dinamica
 bin/app_dinamico: app/principal.c $(DINAMICA)
 	@mkdir -p bin
-	$(CC) $(CFLAGS) $(DFLAGS) -MF $@.d -MT $@ app/principal.c -Llib -lmatriz -lm -Wl,-rpath,'$$ORIGIN/../lib' -o $@
+	$(CC) $(CFLAGS) $(DFLAGS) -MF $@.d -MT $@ app/principal.c -Llib -lcmatrix -lm -Wl,-rpath,'$$ORIGIN/../lib' -o $@
 
 
 # Include dos .d pra incremental
@@ -71,10 +71,10 @@ test: build/test_runner
 
 # Instala as libs no $(HOME)/local
 install: $(ESTATICA) $(DINAMICA)
-	install -d $(PREFIX)/lib $(PREFIX)/include/libmatriz
+	install -d $(PREFIX)/lib $(PREFIX)/include/libcmatrix
 	install -m 644 $(ESTATICA) $(DINAMICA) $(PREFIX)/lib/
-	install -m 644 include/libmatriz.h $(PREFIX)/include/
-	install -m 644 include/libmatriz/*.h $(PREFIX)/include/libmatriz/
+	install -m 644 include/libcmatrix.h $(PREFIX)/include/
+	install -m 644 include/libcmatrix/*.h $(PREFIX)/include/libcmatrix/
 
 # Roda estático
 run-static: bin/app_estatico
@@ -90,9 +90,9 @@ valgrind: all build/test_runner
 
 # Tira do usr/local
 uninstall:
-	rm -f $(PREFIX)/lib/libmatriz.a $(PREFIX)/lib/libmatriz.so
-	rm -rf $(PREFIX)/include/libmatriz
-	rm -rf $(PREFIX)/include/libmatriz.h
+	rm -f $(PREFIX)/lib/libcmatrix.a $(PREFIX)/lib/libcmatrix.so
+	rm -rf $(PREFIX)/include/libcmatrix
+	rm -rf $(PREFIX)/include/libcmatrix.h
 
 # Cleana as pastas
 clean: 
