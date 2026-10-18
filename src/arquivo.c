@@ -26,6 +26,7 @@ MtzStatus mtz_de_vetor(size_t linhas, size_t colunas, const double *dados, Matri
     m->dados = malloc(linhas * colunas * sizeof(double));
 
     if (m->dados == NULL) {
+        free(m);
         return MTZ_ERRO_MEMORIA;
     }
 

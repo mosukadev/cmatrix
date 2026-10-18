@@ -203,11 +203,19 @@ casos normais, valores limite e entradas inválidas.
 
 Saída esperada:
 
+Testes bem sucedidos:
 ```
 [OK] mtz_criar_3x4
 [OK] determinante_H
-...
+```
+
+Testes com falha:
+```
 [FALHA] nome_do_teste (tests/teste_x.c:52): esperado -1.000000, obtido 1.000000
+```
+
+Resultado final:
+```
 Total: 81, Passaram: 81, Falharam: 0
 ```
 
