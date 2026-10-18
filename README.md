@@ -109,8 +109,12 @@ src/*.c ── gcc -c ────────▶ build/est/*.o ── ar rcs �
 src/*.c ── gcc -c -fPIC ──▶ build/din/*.o ── gcc -shared ─▶ lib/libmatriz.so
 
 app/principal.c + lib/libmatriz.a  ─▶ bin/app_estatico
-app/principal.c + lib/libmatriz.so ─▶ bin/app_dinamico
+app/principal.c + -Llib -lmatriz  ─▶ bin/app_dinamico
 ```
+
+O executável dinâmico é ligado pelo nome da biblioteca (`-lmatriz`), e o
+Makefile define um `rpath` relativo ao executável (`$ORIGIN/../lib`) para
+localizar `lib/libmatriz.so` mesmo quando o diretório de trabalho muda.
 
 Flags usadas (variável `CFLAGS` do Makefile):
 
@@ -161,7 +165,7 @@ testes e `lib/libmatriz.a`). Se qualquer um deles mudar, o executável de testes
 | `make test` | Compila e executa todos os testes. Termina com erro se algum falhar. |
 | `make valgrind` | Executa os testes sob o valgrind (`--leak-check=full`) para detectar vazamentos. |
 | `make install` | Instala as bibliotecas e os cabeçalhos públicos em `$(PREFIX)`. |
-| `make uninstall` | Remove `libmatriz.a`, `libmatriz.so` e a pasta `include/libmatriz/` do `$(PREFIX)`. Não remove `include/libmatriz.h` (veja [Instalação](#instalação)). |
+| `make uninstall` | Remove as duas bibliotecas e todos os cabeçalhos instalados em `$(PREFIX)`. |
 
 ## Execução
 
@@ -178,10 +182,10 @@ determinante, se é quadrada e se é simétrica, provoca erros de propósito (tr
 de matriz 2×3 e soma de tamanhos diferentes), grava o produto em `saida.txt` e
 libera toda a memória.
 
-> **Execute sempre a partir da raiz do projeto.** O programa lê
-> `app/exemplo.txt` por caminho relativo, e o executável dinâmico localiza
-> `lib/libmatriz.so` também por caminho relativo. Use `make run-*` ou
-> `./bin/app_dinamico` estando na raiz.
+> **Execute a aplicação de exemplo a partir da raiz do projeto.** Ela lê
+> `app/exemplo.txt` por caminho relativo. A biblioteca dinâmica é localizada
+> pelo `rpath` relativo à localização do executável, não ao diretório de
+> trabalho. Use `make run-*` ou execute `./bin/app_dinamico` estando na raiz.
 
 Para comprovar que cada versão usa a biblioteca esperada:
 
@@ -268,14 +272,8 @@ ls $HOME/.local/lib $HOME/.local/include/libmatriz   # conferir
 make uninstall PREFIX=$HOME/.local                   # desfazer
 ```
 
-O `make uninstall` remove as duas bibliotecas e a pasta
-`$(PREFIX)/include/libmatriz/`, mas **deixa para trás**
-`$(PREFIX)/include/libmatriz.h`, que o `make install` copia. Para limpar tudo,
-remova também esse arquivo:
-
-```bash
-rm -f $HOME/.local/include/libmatriz.h
-```
+O `make uninstall` remove as duas bibliotecas, o cabeçalho principal
+`$(PREFIX)/include/libmatriz.h` e a pasta `$(PREFIX)/include/libmatriz/`.
 
 ## Usando a biblioteca em outro programa
 
