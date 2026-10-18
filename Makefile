@@ -5,7 +5,7 @@ CFLAGS = -Wall -Wextra -Iinclude -Iinclude/libcmatrix -Wpedantic -g
 #GLags para grantir o inncrmental, especialmente cabeçalho dos .o
 DFLAGS = -MMD -MP
 
-PREFIX ?= $(HOME)/.local
+PREFIX ?= /usr/local
 
 #Pastas e nome das bibliotecas
 DINAMICA = lib/libcmatrix.so
@@ -69,7 +69,7 @@ build/test_runner: tests/teste.c $(TEST_SRC) $(TEST_HEADERS) $(ESTATICA)
 test: build/test_runner
 	./build/test_runner
 
-# Instala as libs no $(HOME)/local
+# Instala as bibliotecas e cabeçalhos no $(PREFIX), padrão /usr/local
 install: $(ESTATICA) $(DINAMICA)
 	install -d $(PREFIX)/lib $(PREFIX)/include/libcmatrix
 	install -m 644 $(ESTATICA) $(DINAMICA) $(PREFIX)/lib/
@@ -88,7 +88,7 @@ run-dynamic: bin/app_dinamico
 valgrind: all build/test_runner
 	valgrind --leak-check=full --error-exitcode=1 ./build/test_runner
 
-# Tira do usr/local
+# Remove a instalação em $(PREFIX)
 uninstall:
 	rm -f $(PREFIX)/lib/libcmatrix.a $(PREFIX)/lib/libcmatrix.so
 	rm -rf $(PREFIX)/include/libcmatrix
