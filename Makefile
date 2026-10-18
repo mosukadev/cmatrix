@@ -51,7 +51,7 @@ bin/app_estatico: app/principal.c $(ESTATICA)
 # Gera executável da principal.c linkando com a lib dinamica
 bin/app_dinamico: app/principal.c $(DINAMICA)
 	@mkdir -p bin
-	$(CC) $(CFLAGS) $(DFLAGS) -MF $@.d -MT $@ app/principal.c $(DINAMICA) -lm -Wl,-rpath,'$$ORIGIN/../lib' -o $@
+	$(CC) $(CFLAGS) $(DFLAGS) -MF $@.d -MT $@ app/principal.c -Llib -lmatriz -lm -Wl,-rpath,'$$ORIGIN/../lib' -o $@
 
 
 # Include dos .d pra incremental
@@ -92,6 +92,7 @@ valgrind: all build/test_runner
 uninstall:
 	rm -f $(PREFIX)/lib/libmatriz.a $(PREFIX)/lib/libmatriz.so
 	rm -rf $(PREFIX)/include/libmatriz
+	rm -rf $(PREFIX)/include/libmatriz.h
 
 # Cleana as pastas
 clean: 

@@ -7,7 +7,6 @@
 #include <libmatriz/arquivo.h>
 #include <stdbool.h>
 
-//Arrumar validações
 
 MtzStatus mtz_traco(const Matriz *m, double *saida){
     if(m == NULL || saida == NULL)
